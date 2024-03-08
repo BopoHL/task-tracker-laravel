@@ -3,11 +3,25 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-
+/**
+ * @property string name
+ * @property string email
+ * @property string password
+ * @var DateTime|string $dateOfBirth
+ * @var DateTime|string $emailVerifiedAt
+ * @var DateTime|string $createdAt
+ * @var DateTime|string $updatedAt
+ * @property string rememberToken
+ * @property Project[] $organizations
+ * @property Task[] $tasks
+ */
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -21,6 +35,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'date_of_birth'
     ];
 
     /**
@@ -42,4 +57,21 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function projects(): BelongsToMany
+    {
+        return $this->belongsToMany(Project::class, 'project_user')->withTimestamps();
+    }
+
+    public function ownedProjects(): HasMany
+    {
+        return $this->hasMany(Project::class, 'owner_id');
+    }
+
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(Task::class, 'assigner_id');
+    }
+
+
 }
