@@ -15,9 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('project_name')->index();
             $table->string('project_description')->nullable();
-            $table->unsignedBigInteger('owner_id')->index();
-            $table->foreign('owner_id')->references('id')->on('users')
-                ->cascadeOnUpdate()->cascadeOnDelete();
             $table->timestamps();
         });
     }

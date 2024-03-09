@@ -18,7 +18,8 @@ return new class extends Migration {
             $table->foreignId('project_id')->index()->constrained()
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
-            $table->unique(['project_id', 'user_id']);
+            $table->enum('role', ['owner', 'manager', 'contributor']);
+            $table->unique(['project_id', 'user_id', 'role']);
 
 
             $table->timestamps();
