@@ -18,7 +18,7 @@ class ProjectFactory extends Factory
     {
         return [
             'project_name' => fake()->word(),
-            'project_definition' => fake()->words(),
+            'project_description' => fake()->sentence(),
         ];
     }
 }
