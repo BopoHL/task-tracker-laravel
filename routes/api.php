@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
@@ -20,6 +21,8 @@ use Illuminate\Support\Facades\Route;
 //Route::middleware('auth:sanctum')->get('/project', function (Request $request) {
 //    return $request->user();
 //});
+
+Route::get('/confirm-email/{token}', [AuthController::class, 'confirmEmail'])->name('confirm-email');
 
 Route::post('/users', [UserController::class, 'store']);
 Route::get('/users', [UserController::class, 'index']);

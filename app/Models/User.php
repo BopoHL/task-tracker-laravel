@@ -14,11 +14,12 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string name
  * @property string email
  * @property string password
- * @var DateTime|string $dateOfBirth
- * @var DateTime|string $emailVerifiedAt
- * @var DateTime|string $createdAt
- * @var DateTime|string $updatedAt
- * @property string rememberToken
+ * @property string avatar_url
+ * @property  DateTime|string date_of_birth
+ * @property  DateTime|string email_verified_at
+ * @property  DateTime|string created_at
+ * @property  DateTime|string updated_at
+ * @property string remember_token
  * @property Project[] $organizations
  * @property Task[] $tasks
  */

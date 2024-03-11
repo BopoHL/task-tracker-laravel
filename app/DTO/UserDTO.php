@@ -18,7 +18,7 @@ class UserDTO
         private readonly string          $email,
         private readonly string|DateTime $dateOfBirth,
         private readonly string          $password,
-        private readonly string          $avatarUrl,
+        private readonly string|null     $avatarUrl,
     )
     {
 
@@ -47,7 +47,7 @@ class UserDTO
         return $this->password;
     }
 
-    public function getAvatarUrl(): string
+    public function getAvatarUrl(): string|null
     {
         return $this->avatarUrl;
     }
@@ -59,7 +59,7 @@ class UserDTO
             email: $data['email'],
             dateOfBirth: $data['date_of_birth'],
             password: $data['password'],
-            avatarUrl: $data['avatar_url'],
+            avatarUrl: $data['avatar_url'] ?? null,
         );
     }
 }

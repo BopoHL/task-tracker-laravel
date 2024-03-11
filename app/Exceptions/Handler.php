@@ -18,6 +18,19 @@ class Handler extends ExceptionHandler
         'password_confirmation',
     ];
 
+    public function render($request, Throwable $e)
+    {
+        $statusCode = $e instanceof \HttpException
+            ? $e->getCode()
+            : 500;
+
+        return response(['error' => [
+            'code' => $statusCode,
+            'message' => $e->getMessage(),
+        ]
+        ], $statusCode);
+    }
+
     /**
      * Register the exception handling callbacks for the application.
      */
