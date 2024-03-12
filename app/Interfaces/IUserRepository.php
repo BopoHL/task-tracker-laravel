@@ -10,7 +10,7 @@ interface IUserRepository
 {
     public function getAllUsers(): Collection;
 
-    public function getUserById(int $userId, string|array $relatedTables): User|null;
+    public function getUserById(string $userId, string|array $relatedTables): User|null;
 
     public function getUserByEmail(string $email, string|array $relatedTables): User|null;
 

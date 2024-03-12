@@ -7,42 +7,42 @@ use DateTime;
 class UserDTO
 {
     /**
-     * @param string $name
-     * @param string $email
-     * @param string|DateTime $dateOfBirth
-     * @param string $password
-     * @param string $avatarUrl
+     * @param string|null $name
+     * @param string|null $email
+     * @param string|DateTime|null $dateOfBirth
+     * @param string|null $password
+     * @param string|null $avatarUrl
      */
     public function __construct(
-        private readonly string          $name,
-        private readonly string          $email,
-        private readonly string|DateTime $dateOfBirth,
-        private readonly string          $password,
-        private readonly string|null     $avatarUrl,
+        private readonly string|null          $name,
+        private readonly string|null          $email,
+        private readonly string|DateTime|null $dateOfBirth,
+        private readonly string|null          $password,
+        private readonly string|null          $avatarUrl,
     )
     {
 
     }
 
-    public function getName(): string
+    public function getName(): string|null
     {
         return $this->name;
     }
 
-    public function getEmail(): string
+    public function getEmail(): string|null
     {
         return $this->email;
     }
 
     /**
-     * @return string|DateTime
+     * @return string|DateTime|null
      */
-    public function getDateOfBirth(): string|DateTime
+    public function getDateOfBirth(): string|DateTime|null
     {
         return $this->dateOfBirth;
     }
 
-    public function getPassword(): string
+    public function getPassword(): string|null
     {
         return $this->password;
     }
@@ -55,10 +55,10 @@ class UserDTO
     public static function fromArray(array $data): static
     {
         return new static(
-            name: $data['name'],
-            email: $data['email'],
-            dateOfBirth: $data['date_of_birth'],
-            password: $data['password'],
+            name: $data['name'] ?? null,
+            email: $data['email'] ?? null,
+            dateOfBirth: $data['date_of_birth'] ?? null,
+            password: $data['password'] ?? null,
             avatarUrl: $data['avatar_url'] ?? null,
         );
     }

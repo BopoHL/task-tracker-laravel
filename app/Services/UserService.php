@@ -29,7 +29,7 @@ class UserService
     /**
      * @throws NotFoundException
      */
-    public function getUserById(int $userId, string|array $relatedTables = []): ?User
+    public function getUserById(string $userId, string|array $relatedTables = []): ?User
     {
         $user = $this->repository->getUserById($userId, $relatedTables);
         if ($user === null) {
@@ -76,5 +76,57 @@ class UserService
 
         // Save user to database, without email_verified_at field
         return $this->repository->storeUser($userDTO);
+    }
+
+    /**
+     * @throws NotFoundException
+     */
+    public function updateUser(UserDTO $userDTO, string $userId): User
+    {
+        $user = $this->repository->getUserById($userId);
+
+        if ($user === null) {
+            throw new NotFoundException(__('messages.user_with_id_not_found'));
+        }
+
+        $email = $userDTO->getEmail();
+        $name = $userDTO->getName();
+        $avatarUrl = $userDTO->getAvatarUrl();
+        $dateOfBirth = $userDTO->getDateOfBirth();
+        $password = $userDTO->getPassword();
+
+        if ($email !== null) {
+            $user->email = $email;
+        }
+        if ($name !== null) {
+            $user->name = $name;
+        }
+        if ($avatarUrl !== null) {
+            $user->avatar_url = $avatarUrl;
+        }
+        if ($dateOfBirth !== null) {
+            $user->date_of_birth = $dateOfBirth;
+        }
+        if ($password !== null) {
+            $user->password = $password;
+        }
+
+        $user->save();
+        return $user;
+    }
+
+    /**
+     * @throws NotFoundException
+     */
+    public function deleteUser(string $userId): string
+    {
+        $user = $this->repository->getUserById($userId);
+
+        if ($user === null) {
+            throw new NotFoundException(__('messages.user_with_id_not_found'));
+        }
+
+        $user->delete();
+        return __('messages.delete_successful');
     }
 }

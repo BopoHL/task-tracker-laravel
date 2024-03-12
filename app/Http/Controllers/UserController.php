@@ -6,11 +6,13 @@ use App\DTO\UserDTO;
 use App\Exceptions\AlreadyExistException;
 use App\Exceptions\NotFoundException;
 use App\Http\Requests\CreateUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use App\Services\UserService;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -28,14 +30,6 @@ class UserController extends Controller
     public function index(): Collection
     {
         return $this->service->getAllUsers();
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -60,26 +54,26 @@ class UserController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
+     * @throws NotFoundException
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateUserRequest $request, string $userId): UserResource
     {
-        //
+        $validated = $request->validated();
+
+        $user = $this->service->updateUser(UserDTO::fromArray($validated), $userId);
+
+        return new UserResource($user);
     }
 
     /**
      * Remove the specified resource from storage.
+     * @throws NotFoundException
      */
-    public function destroy(string $id)
+    public function destroy(string $userId): JsonResponse
     {
-        //
+        $result = $this->service->deleteUser($userId);
+
+        return response()->json(['message' => $result]);
     }
 }

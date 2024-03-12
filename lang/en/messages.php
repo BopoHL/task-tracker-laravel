@@ -9,4 +9,5 @@ return [
     'finish_register' => 'To complete registration please follow the following link:',
     'link' => 'link',
     'token_expired' => 'Token expired',
+    'delete_successful' => 'Delete was successful',
 ];
