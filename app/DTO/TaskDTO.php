@@ -7,66 +7,66 @@ use DateTime;
 class TaskDTO
 {
     /**
-     * @param string $taskName
-     * @param string $taskDescription
-     * @param string $status
-     * @param string $priority
-     * @param string|DateTime $deadline
-     * @param int $projectId
-     * @param int|null $assignerId
+     * @param string|null $taskName
+     * @param string|null $taskDescription
+     * @param string|null $status
+     * @param string|null $priority
+     * @param string|DateTime|null $deadline
+     * @param string|null $projectId
+     * @param string|null $assignerId
      */
     public function __construct(
-        private readonly string          $taskName,
-        private readonly string          $taskDescription,
-        private readonly string          $status,
-        private readonly string          $priority,
-        private readonly string|DateTime $deadline,
-        private readonly int             $projectId,
-        private readonly int|null        $assignerId,
+        private readonly string|null          $taskName,
+        private readonly string|null          $taskDescription,
+        private readonly string|null          $status,
+        private readonly string|null          $priority,
+        private readonly string|DateTime|null $deadline,
+        private readonly string|null             $projectId,
+        private readonly string|null        $assignerId,
     )
     {
 
     }
 
-    public function getTaskName(): string
+    public function getTaskName(): string|null
     {
         return $this->taskName;
     }
 
-    public function getTaskDescription(): string
+    public function getTaskDescription(): string|null
     {
         return $this->taskDescription;
     }
 
-    public function getStatus(): string
+    public function getStatus(): string|null
     {
         return $this->status;
     }
 
-    public function getPriority(): string
+    public function getPriority(): string|null
     {
         return $this->priority;
     }
 
     /**
-     * @return DateTime|string
+     * @return DateTime|string|null
      */
-    public function getDeadline(): DateTime|string
+    public function getDeadline(): DateTime|string|null
     {
         return $this->deadline;
     }
 
-    public function getProjectId(): int
+    public function getProjectId(): string|null
     {
         return $this->projectId;
     }
 
-    public function getAssignerId(): int
+    public function getAssignerId(): string|null
     {
         return $this->assignerId;
     }
 
-    public function fromArray(array $data): static
+    public static function fromArray(array $data): static
     {
         return new static(
             taskName: $data['task_name'],
