@@ -2,28 +2,40 @@
 
 namespace App\Repositories;
 
+use App\DTO\ProjectDTO;
 use App\Interfaces\IProjectRepository;
+use App\Models\Project;
+use Illuminate\Database\Eloquent\Collection;
 
 class ProjectRepository implements IProjectRepository
 {
 
-    public function getAllProjects()
+    public function getAllProjects(): Collection
     {
-        // TODO: Implement getAllProjects() method.
+        return Project::all();
     }
 
-    public function getProjectById()
+    public function getProjectById(string $projectId, string|array $relatedTables): ?Project
     {
-        // TODO: Implement getProjectById() method.
+        /** @var Project|null $project */
+        $project = Project::with($relatedTables)->find($projectId);
+        return $project;
     }
 
-    public function getProjectByName()
+    public function getProjectByName(string $projectName, string|array $relatedTables): ?Project
     {
-        // TODO: Implement getProjectByName() method.
+        /** @var Project|null $project */
+        $project = Project::with($relatedTables)->where('project_name', $projectName)->first();
+        return $project;
     }
 
-    public function storeProject()
+    public function storeProject(ProjectDTO $projectDTO): Project
     {
-        // TODO: Implement storeProject() method.
+        $project = new Project();
+        $project->projectName = $projectDTO->getProjectName();
+        $project->projectDescription = $projectDTO->getProjectDescription();
+        $project->save();
+        return $project;
+
     }
 }

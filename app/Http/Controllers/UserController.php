@@ -7,6 +7,7 @@ use App\Exceptions\AlreadyExistException;
 use App\Exceptions\NotFoundException;
 use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Repositories\UserRepository;
@@ -14,6 +15,7 @@ use App\Services\UserService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class UserController extends Controller
 {
@@ -21,36 +23,37 @@ class UserController extends Controller
     /**
      * @param UserService $service
      */
-    public function __construct(private UserService $service)
+    public function __construct(private readonly UserService $service)
     {
     }
     /**
      * Display a listing of the resource.
      */
-    public function index(): Collection
+    public function index(): UserCollection
     {
-        return $this->service->getAllUsers();
+        $users = $this->service->getAllUsers();
+        return new UserCollection($users);
     }
 
     /**
      * Store a newly created resource in storage.
      * @throws AlreadyExistException
      */
-    public function store(CreateUserRequest $request): UserResource
+    public function store(CreateUserRequest $request): JsonResponse
     {
         $validated = $request->validated();
         $user = $this->service->createUser(UserDTO::fromArray($validated));
-        return new UserResource($user);
+        return response()->json(new UserResource($user));
     }
 
     /**
      * Display the specified resource.
      * @throws NotFoundException
      */
-    public function show(string $userId): ?User
+    public function show(string $userId): JsonResponse
     {
         $user = $this->service->getUserById($userId, 'projects.tasks');
-        return $user;
+        return response()->json(new UserResource($user));
     }
 
     /**

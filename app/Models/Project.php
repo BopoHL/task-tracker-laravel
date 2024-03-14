@@ -11,14 +11,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 
 /**
- * @property string $projectName
- * @property string $projectDescription
- * @property int $ownerId
+ * @property string project_name
+ * @property string project_description
+ * @property int owner_id
  * @property User $owner
  * @property User[] $users
  * @property Task[] $tasks
- * @var DateTime|string $createdAt
- * @var DateTime|string $updatedAt
+ * @var DateTime|string created_at
+ * @var DateTime|string updated_at
  */
 class Project extends Model
 {

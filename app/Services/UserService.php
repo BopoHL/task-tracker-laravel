@@ -33,7 +33,7 @@ class UserService
     {
         $user = $this->repository->getUserById($userId, $relatedTables);
         if ($user === null) {
-            throw new NotFoundException(__('messages.user_with_id_not_found'));
+            throw new NotFoundException('User' . __('messages.with_id_not_found'));
         }
 
         return $user;
@@ -47,7 +47,7 @@ class UserService
         $user = $this->repository->getUserByEmail($email, $relatedTables);
 
         if ($user === null) {
-            throw new NotFoundException(__('messages.user_with_email_not_found'));
+            throw new NotFoundException('User' . __('messages.with_email_not_found'));
         }
 
         return $user;
@@ -59,23 +59,22 @@ class UserService
     public function createUser(UserDTO $userDTO): User
     {
         $userEmail = $userDTO->getEmail();
-        $userWithEmail = $this->repository->getUserByEmail(email: $userEmail);
+        try {
+            $userWithEmail = $this->getUserByEmail(email: $userEmail);
+        } catch (NotFoundException) {
+            // Creating confirmation token and saving it into Cache.
+            $confirmationToken = Str::uuid();
+            Cache::put('confirm_token_' . $confirmationToken, $userEmail, 600);
+            // Creating confirmation link
+            $confirmationLink = route('confirm-email', ['token' => $confirmationToken]);
+            // Send confirmation link with token on email
+            dispatch(new SendConfirmEmail($userEmail, $confirmationLink));
 
-        // Check for existence user with such email
-        if ($userWithEmail !== null) {
-            throw new AlreadyExistException(__('messages.user_with_email_already_exist'));
+            // Save user to database, without email_verified_at field
+            return $this->repository->storeUser($userDTO);
         }
 
-        // Creating confirmation token and saving it into Cache.
-        $confirmationToken = Str::uuid();
-        Cache::put('confirm_token_' . $confirmationToken, $userEmail, 600);
-        // Creating confirmation link
-        $confirmationLink = route('confirm-email', ['token' => $confirmationToken]);
-        // Send confirmation link with token on email
-        dispatch(new SendConfirmEmail($userEmail, $confirmationLink));
-
-        // Save user to database, without email_verified_at field
-        return $this->repository->storeUser($userDTO);
+        throw new AlreadyExistException('User' . __('messages.with_email_already_exist'));
     }
 
     /**
@@ -83,11 +82,7 @@ class UserService
      */
     public function updateUser(UserDTO $userDTO, string $userId): User
     {
-        $user = $this->repository->getUserById($userId);
-
-        if ($user === null) {
-            throw new NotFoundException(__('messages.user_with_id_not_found'));
-        }
+        $user = $this->getUserById($userId);
 
         $email = $userDTO->getEmail();
         $name = $userDTO->getName();
@@ -120,11 +115,7 @@ class UserService
      */
     public function deleteUser(string $userId): string
     {
-        $user = $this->repository->getUserById($userId);
-
-        if ($user === null) {
-            throw new NotFoundException(__('messages.user_with_id_not_found'));
-        }
+        $user = $this->getUserById($userId);
 
         $user->delete();
         return __('messages.delete_successful');

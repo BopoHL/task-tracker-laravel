@@ -1,8 +1,9 @@
 <?php
 return [
-    'user_with_id_not_found' => 'Пользователь с таким ID не найден',
-    'user_with_email_not_found' => 'Пользователь с таким email не найден',
-    'user_with_email_already_exist' => 'Пользователь с таким email уже существует',
+    'with_id_not_found' => 'с таким ID не найден',
+    'with_email_not_found' => 'с таким email не найден',
+    'with_email_already_exist' => 'с таким email уже существует',
+    'with_name_not_found' => 'с таким именем не найден',
     'something_went_wrong' => 'Что-то пошло не так =(',
     'email_confirmation' => 'Подтверждение email',
     'thanks' => 'Спасибо',

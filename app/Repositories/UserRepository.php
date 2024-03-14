@@ -21,14 +21,14 @@ class UserRepository implements IUserRepository
 
     // Поиск User в базе по Id, с возможностью добавить к ответу связанные projects и tasks
     // Search User in base by Id, with opportunity add to response linked projects and tasks
-    public function getUserById(string $userId, string|array $relatedTables = []): User|null
+    public function getUserById(string $userId, string|array $relatedTables): User|null
     {
         /** @var User|null $user */
         $user = User::with($relatedTables)->find($userId);
         return $user;
     }
 
-    public function getUserByEmail(string $email, string|array $relatedTables = []): ?User
+    public function getUserByEmail(string $email, string|array $relatedTables): ?User
     {
         /** @var User|null $user */
         $user = User::with($relatedTables)->where('email', $email)->first();

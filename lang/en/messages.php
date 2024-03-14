@@ -1,8 +1,9 @@
 <?php
 return [
-    'user_with_id_not_found' => 'User with this ID not found',
-    'user_with_email_not_found' => 'User with this email not found',
-    'user_with_email_already_exist' => 'User with this email already exist',
+    'with_id_not_found' => 'with this ID not found',
+    'with_email_not_found' => 'with this email not found',
+    'with_name_not_found' => 'with this name not found',
+    'with_email_already_exist' => 'with this email already exist',
     'something_went_wrong' => 'Something went wrong =(',
     'email_confirmation' => 'Email confirmation',
     'thanks' => 'Thank You',
