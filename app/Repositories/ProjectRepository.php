@@ -32,8 +32,8 @@ class ProjectRepository implements IProjectRepository
     public function storeProject(ProjectDTO $projectDTO): Project
     {
         $project = new Project();
-        $project->projectName = $projectDTO->getProjectName();
-        $project->projectDescription = $projectDTO->getProjectDescription();
+        $project->project_name = $projectDTO->getProjectName();
+        $project->project_description = $projectDTO->getProjectDescription();
         $project->save();
         return $project;
 
