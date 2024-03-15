@@ -5,11 +5,12 @@ namespace App\Repositories;
 use App\DTO\TaskDTO;
 use App\Interfaces\ITaskRepository;
 use App\Models\Task;
+use Illuminate\Database\Eloquent\Collection;
 
 class TaskRepository implements ITaskRepository
 {
 
-    public function getAllTasks()
+    public function getAllTasks(): Collection
     {
         return Task::all();
     }

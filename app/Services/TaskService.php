@@ -6,6 +6,7 @@ use App\DTO\TaskDTO;
 use App\Exceptions\NotFoundException;
 use App\Interfaces\ITaskRepository;
 use App\Models\Task;
+use Illuminate\Database\Eloquent\Collection;
 
 class TaskService
 {

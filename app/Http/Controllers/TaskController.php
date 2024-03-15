@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\DTO\TaskDTO;
 use App\Exceptions\NotFoundException;
+use App\Http\Requests\TaskRequest;
 use App\Http\Resources\TaskCollection;
 use App\Http\Resources\TaskResource;
 use App\Services\TaskService;
@@ -21,7 +22,7 @@ class TaskController extends Controller
 
     }
 
-    public function index()
+    public function index(): TaskCollection
     {
         $tasks = $this->service->getAllTasks();
         return new TaskCollection($tasks);
@@ -30,7 +31,7 @@ class TaskController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(TaskRequest $request): JsonResponse
     {
         $validated = $request->validated();
         $task = $this->service->createTask(TaskDTO::fromArray($validated));
@@ -43,7 +44,7 @@ class TaskController extends Controller
      */
     public function show(string $taskId): JsonResponse
     {
-        $task = $this->service->getTaskById($taskId, 'tasks.assigner');
+        $task = $this->service->getTaskById($taskId, ['assigner', 'project']);
         return response()->json(new TaskResource($task));
     }
 
@@ -52,7 +53,7 @@ class TaskController extends Controller
      * Update the specified resource in storage.
      * @throws NotFoundException
      */
-    public function update(Request $request, string $taskId)
+    public function update(TaskRequest $request, string $taskId): JsonResponse
     {
         $validated = $request->validated();
         $task = $this->service->updateTask(TaskDTO::fromArray($validated), $taskId);
@@ -63,7 +64,7 @@ class TaskController extends Controller
      * Remove the specified resource from storage.
      * @throws NotFoundException
      */
-    public function destroy(string $taskId)
+    public function destroy(string $taskId): JsonResponse
     {
         $result = $this->service->deleteTask($taskId);
         return response()->json(['message' => $result]);

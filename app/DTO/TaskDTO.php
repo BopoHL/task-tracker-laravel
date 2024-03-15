@@ -70,12 +70,12 @@ class TaskDTO
     {
         return new static(
             taskName: $data['task_name'],
-            taskDescription: $data['task_description'],
-            status: $data['status'],
-            priority: $data['priority'],
-            deadline: $data['deadline'],
+            taskDescription: $data['task_description'] ?? null,
+            status: $data['status'] ?? 'not_started',
+            priority: $data['priority'] ?? null,
+            deadline: $data['deadline'] ?? null,
             projectId: $data['project_id'],
-            assignerId: $data['assigner_id'],
+            assignerId: $data['assigner_id'] ?? null,
         );
     }
 }
