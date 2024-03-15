@@ -35,6 +35,7 @@ Route::get('/projects', [ProjectController::class, 'index']);
 Route::get('/projects/{project_id}', [ProjectController::class, 'show']);
 Route::match(['put', 'patch'], '/projects/{project_id}', [ProjectController::class, 'update']);
 Route::delete('projects/{project_id}', [ProjectController::class, 'destroy']);
+Route::post('projects/{project_id}', [ProjectController::class, 'addMember']);
 
 Route::post('/tasks', [TaskController::class, 'store']);
 Route::get('/tasks', [TaskController::class, 'index']);

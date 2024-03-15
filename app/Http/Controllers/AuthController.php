@@ -6,6 +6,7 @@ use App\Exceptions\NotFoundException;
 use App\Http\Resources\UserResource;
 use App\Services\UserService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
 class AuthController extends Controller
@@ -32,6 +33,22 @@ class AuthController extends Controller
             return new UserResource($user);
         } else {
             throw new NotFoundException(__('messages.token_expired'));
+        }
+    }
+
+    public function login(Request $request)
+    {
+        $validated = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string|min:6'
+        ]);
+
+        if (Auth::validate([
+            'email' => $validated['email'],
+            'password' => $validated['password'],
+        ])) {
+            $user = Auth::user();
+//            if () {}
         }
     }
 }

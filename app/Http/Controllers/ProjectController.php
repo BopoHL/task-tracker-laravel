@@ -7,6 +7,7 @@ use App\Exceptions\NotFoundException;
 use App\Http\Requests\ProjectRequest;
 use App\Http\Resources\ProjectCollection;
 use App\Http\Resources\ProjectResource;
+use App\Services\AddUserToProjectService;
 use App\Services\ProjectService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
@@ -47,7 +48,7 @@ class ProjectController extends Controller
      */
     public function show(string $projectId): JsonResponse
     {
-        $project = $this->service->getProjectById($projectId, 'tasks.assigner');
+        $project = $this->service->getProjectById($projectId, ['tasks.assigner', 'users']);
         return response()->json(new ProjectResource($project));
     }
 
@@ -70,5 +71,19 @@ class ProjectController extends Controller
     {
         $result = $this->service->deleteProject($projectId);
         return response()->json(['message' => $result]);
+    }
+
+    /**
+     * @throws NotFoundException
+     */
+    public function addMember(Request $request, $projectId, AddUserToProjectService $service): JsonResponse
+    {
+        $validated = $request->validate([
+                'email' => 'required|email',
+                'role' => 'required|string|in:owner,manager,contributor',
+            ]
+        );
+        $project = $service->addUserToProject(userEmail: $validated['email'], role: $validated['role'], projectId: $projectId);
+        return response()->json(new ProjectResource($project));
     }
 }
