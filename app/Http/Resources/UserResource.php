@@ -20,7 +20,17 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'date_of_birth' => $this->date_of_birth,
             'avatar_url' => $this->avatar_url,
-            'projects' => ProjectResource::collection($this->whenLoaded('projects')),
+            'projects' => $this->whenLoaded('projects', function () {
+                return $this->projects->map(function ($project) {
+                    return [
+                        'project_id' => $project->id,
+                        'project_name' => $project->project_name,
+                        'project_description' => $project->project_description,
+                        'role' => $project->pivot->role,
+                    ];
+                });
+            }),
+//            'projects' => ProjectResource::collection($this->whenLoaded('projects')),
             'tasks' => TaskResource::collection($this->whenLoaded('tasks')),
         ];
     }
