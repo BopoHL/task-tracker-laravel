@@ -5,14 +5,16 @@ namespace App\Repositories;
 use App\DTO\ProjectDTO;
 use App\Interfaces\IProjectRepository;
 use App\Models\Project;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
 class ProjectRepository implements IProjectRepository
 {
 
-    public function getAllProjects(): Collection
+    public function getAllProjects(): LengthAwarePaginator
     {
-        return Project::all();
+        return DB::table('projects')->paginate(50);
     }
 
     public function getProjectById(string $projectId, string|array $relatedTables): ?Project

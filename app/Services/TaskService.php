@@ -6,6 +6,7 @@ use App\DTO\TaskDTO;
 use App\Exceptions\NotFoundException;
 use App\Interfaces\ITaskRepository;
 use App\Models\Task;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
 class TaskService
@@ -16,7 +17,7 @@ class TaskService
 
     }
 
-    public function getAllTasks(): Collection
+    public function getAllTasks(): LengthAwarePaginator
     {
         return $this->repository->getAllTasks();
     }

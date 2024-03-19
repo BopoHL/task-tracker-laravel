@@ -5,18 +5,17 @@ namespace App\Repositories;
 use App\DTO\UserDTO;
 use App\Interfaces\IUserRepository;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
-use PhpParser\Node\Stmt\Return_;
-use function PHPUnit\Framework\isNull;
+use Illuminate\Support\Facades\DB;
+
 
 class UserRepository implements IUserRepository
 {
 
-    public function getAllUsers(): Collection
+    public function getAllUsers(): LengthAwarePaginator
     {
-        return User::all();
+        return DB::table('users')->paginate(50);
     }
 
     // Поиск User в базе по Id, с возможностью добавить к ответу связанные projects и tasks

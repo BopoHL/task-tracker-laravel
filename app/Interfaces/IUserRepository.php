@@ -4,11 +4,12 @@ namespace App\Interfaces;
 
 use App\DTO\UserDTO;
 use App\Models\User;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
 interface IUserRepository
 {
-    public function getAllUsers(): Collection;
+    public function getAllUsers(): LengthAwarePaginator;
 
     public function getUserById(string $userId, string|array $relatedTables): User|null;
 

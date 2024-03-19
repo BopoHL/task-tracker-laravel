@@ -6,6 +6,7 @@ use App\DTO\ProjectDTO;
 use App\Exceptions\NotFoundException;
 use App\Interfaces\IProjectRepository;
 use App\Models\Project;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
 class ProjectService
@@ -15,7 +16,7 @@ class ProjectService
 
     }
 
-    public function getAllProjects(): Collection
+    public function getAllProjects(): LengthAwarePaginator
     {
         return $this->repository->getAllProjects();
     }

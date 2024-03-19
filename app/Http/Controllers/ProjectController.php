@@ -50,6 +50,10 @@ class ProjectController extends Controller
     {
         $project = $this->service->getProjectById($projectId, ['tasks.assigner', 'users']);
         return response()->json(new ProjectResource($project));
+//        return new ProjectResource($project);
+//        return response()->json($project);
+
+
     }
 
     /**
@@ -62,6 +66,7 @@ class ProjectController extends Controller
         $project = $this->service->updateProject(ProjectDTO::fromArray($validated), $projectId);
         return response()->json(new ProjectResource($project));
     }
+
 
     /**
      * Remove the specified resource from storage.

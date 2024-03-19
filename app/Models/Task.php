@@ -16,9 +16,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property Project $project
  * @property int project_id
  * @property int assigner_id
- * @var DateTime|string created_at
- * @var DateTime|string updated_at
- * @var DateTime|string deadline
+ * @property  DateTime|string deadline
+ * @property  DateTime|string created_at
+ * @property  DateTime|string updated_at
  */
 
 class Task extends Model

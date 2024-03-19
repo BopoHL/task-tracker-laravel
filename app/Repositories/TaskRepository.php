@@ -5,14 +5,16 @@ namespace App\Repositories;
 use App\DTO\TaskDTO;
 use App\Interfaces\ITaskRepository;
 use App\Models\Task;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
 class TaskRepository implements ITaskRepository
 {
 
-    public function getAllTasks(): Collection
+    public function getAllTasks(): LengthAwarePaginator
     {
-        return Task::all();
+        return DB::table('tasks')->paginate(50);
     }
 
     public function getTaskById(string $taskId, string|array $relatedTables): ?Task
@@ -64,8 +66,8 @@ class TaskRepository implements ITaskRepository
         $task->status = $taskDTO->getStatus();
         $task->priority = $taskDTO->getPriority();
         $task->deadline = $taskDTO->getDeadline();
-        $task->project_id= $taskDTO->getProjectId();
-        $task->assigner_id= $taskDTO->getAssignerId();
+        $task->project_id = $taskDTO->getProjectId();
+        $task->assigner_id = $taskDTO->getAssignerId();
         $task->save();
         return $task;
 

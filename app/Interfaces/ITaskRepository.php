@@ -4,10 +4,11 @@ namespace App\Interfaces;
 
 use App\DTO\TaskDTO;
 use App\Models\Task;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 interface ITaskRepository
 {
-    public function getAllTasks();
+    public function getAllTasks(): LengthAwarePaginator;
 
     public function getTaskById(string $taskId, string|array $relatedTables): ?Task;
 
