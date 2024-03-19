@@ -34,7 +34,7 @@ class UserService
     {
         $user = $this->repository->getUserById($userId, $relatedTables);
         if ($user === null) {
-            throw new NotFoundException('User' . __('messages.with_id_not_found'));
+            throw new NotFoundException('User ' . __('messages.with_id_not_found'));
         }
 
         return $user;
@@ -48,7 +48,7 @@ class UserService
         $user = $this->repository->getUserByEmail($email, $relatedTables);
 
         if ($user === null) {
-            throw new NotFoundException('User' . __('messages.with_email_not_found'));
+            throw new NotFoundException('User ' . __('messages.with_email_not_found'));
         }
 
         return $user;
@@ -75,7 +75,7 @@ class UserService
             return $this->repository->storeUser($userDTO);
         }
 
-        throw new AlreadyExistException('User' . __('messages.with_email_already_exist'));
+        throw new AlreadyExistException('User ' . __('messages.with_email_already_exist'));
     }
 
     /**

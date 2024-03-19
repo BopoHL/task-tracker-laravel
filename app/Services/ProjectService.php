@@ -28,7 +28,7 @@ class ProjectService
     {
         $project = $this->repository->getProjectById($projectId, $relatedTables);
         if ($project === null) {
-            throw new NotFoundException('Project' . __('messages.with_id_not_found'));
+            throw new NotFoundException('Project ' . __('messages.with_id_not_found'));
         }
 
         return $project;
@@ -41,7 +41,7 @@ class ProjectService
     {
         $project = $this->repository->getProjectByName($projectName, $relatedTables);
         if ($project === null) {
-            throw new NotFoundException('Project' . __('messages.with_name_not_found'));
+            throw new NotFoundException('Project ' . __('messages.with_name_not_found'));
         }
         return $project;
     }

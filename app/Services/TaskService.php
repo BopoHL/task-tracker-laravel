@@ -29,7 +29,7 @@ class TaskService
     {
         $task = $this->repository->getTaskById($taskId, $relatedTables);
         if ($task === null) {
-            throw new NotFoundException('Task' . __('messages.with_id_not_found'));
+            throw new NotFoundException('Task ' . __('messages.with_id_not_found'));
         }
 
         return $task;
@@ -42,7 +42,7 @@ class TaskService
     {
         $task = $this->repository->getTaskByName($taskName, $relatedTables);
         if ($task === null) {
-            throw new NotFoundException('Task' . __('messages.with_name_not_found'));
+            throw new NotFoundException('Task ' . __('messages.with_name_not_found'));
         }
         return $task;
     }
