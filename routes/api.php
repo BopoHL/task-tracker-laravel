@@ -1,10 +1,9 @@
 <?php
 
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ProjectController;
-use App\Http\Controllers\TaskController;
-use App\Http\Controllers\UserController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Projects\ProjectController;
+use App\Http\Controllers\Tasks\TaskController;
+use App\Http\Controllers\Users\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,18 +29,18 @@ Route::get('/users/{user_id}', [UserController::class, 'show']);
 Route::match(['put', 'patch'], '/users/{user_id}', [UserController::class, 'update']);
 Route::delete('users/{user_id}', [UserController::class, 'destroy']);
 
-Route::post('/projects', [ProjectController::class, 'store']);
-Route::get('/projects', [ProjectController::class, 'index']);
-Route::get('/projects/{project_id}', [ProjectController::class, 'show']);
-Route::match(['put', 'patch'], '/projects/{project_id}', [ProjectController::class, 'update']);
-Route::delete('projects/{project_id}', [ProjectController::class, 'destroy']);
-Route::post('projects/{project_id}', [ProjectController::class, 'addMember']);
+Route::post('users/{user_id}/projects', [ProjectController::class, 'store']);
+Route::get('users/{user_id}/projects', [ProjectController::class, 'index']);
+Route::get('users/{user_id}/projects/{project_id}', [ProjectController::class, 'show']);
+Route::match(['put', 'patch'], 'users/{user_id}/projects/{project_id}', [ProjectController::class, 'update']);
+Route::delete('users/{user_id}/projects/{project_id}', [ProjectController::class, 'destroy']);
+Route::post('users/{user_id}/projects/{project_id}/add-member', [ProjectController::class, 'addMember']);
 
-Route::post('/tasks', [TaskController::class, 'store']);
-Route::get('/tasks', [TaskController::class, 'index']);
-Route::get('/tasks/{task_id}', [TaskController::class, 'show']);
-Route::match(['put', 'patch'], 'tasks/{task_id}', [TaskController::class, 'update']);
-Route::delete('tasks/{task_id}', [TaskController::class, 'destroy']);
+Route::post('users/{user_id}/projects/{project_id}/tasks', [TaskController::class, 'store']);
+Route::get('users/{user_id}/projects/{project_id}/tasks', [TaskController::class, 'index']);
+Route::get('users/{user_id}/projects/{project_id}/tasks/{task_id}', [TaskController::class, 'show']);
+Route::match(['put', 'patch'], 'users/{user_id}/projects/{project_id}/tasks/{task_id}', [TaskController::class, 'update']);
+Route::delete('users/{user_id}/projects/{project_id}/tasks/{task_id}', [TaskController::class, 'destroy']);
 
 
 

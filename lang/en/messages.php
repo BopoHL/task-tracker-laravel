@@ -11,4 +11,5 @@ return [
     'link' => 'link',
     'token_expired' => 'Token expired',
     'delete_successful' => 'Delete was successful',
+    'invalid_operation' => 'This operation is invalid',
 ];

@@ -17,24 +17,24 @@ class TaskRepository implements ITaskRepository
         return DB::table('tasks')->paginate(50);
     }
 
-    public function getTaskById(string $taskId, string|array $relatedTables): ?Task
+    public function getTaskById(int $taskId, string|array $relatedTables): ?Task
     {
         /** @var Task|null $task */
         $task = Task::with($relatedTables)->find($taskId);
         return $task;
     }
 
-    public function getTasksByProject(string $projectId, string|array $relatedTables): ?Task
+    public function getTasksByProject(int $projectId, string|array $relatedTables): ?Task
     {
         /** @var Task|null $task */
-        $task = Task::with($relatedTables)->find($projectId);
+        $task = Task::with($relatedTables)->where('project_id', $projectId)->get();
         return $task;
     }
 
-    public function getTasksByAssigner(string $assignerId, string|array $relatedTables): ?Task
+    public function getTasksByAssigner(int $assignerId, string|array $relatedTables): ?Task
     {
         /** @var Task|null $task */
-        $task = Task::with($relatedTables)->find($assignerId);
+        $task = Task::with($relatedTables)->where('assigner_id', $assignerId)->get();
         return $task;
     }
 
@@ -48,14 +48,14 @@ class TaskRepository implements ITaskRepository
     public function getTasksByPriority(string $priority, string|array $relatedTables): ?Task
     {
         /** @var Task|null $task */
-        $task = Task::with($relatedTables)->where('priority', $priority)->first();
+        $task = Task::with($relatedTables)->where('priority', $priority)->get();
         return $task;
     }
 
     public function getTasksByStatus(string $status, string|array $relatedTables): ?Task
     {
         /** @var Task|null $task */
-        $task = Task::with($relatedTables)->where('status', $status)->first();
+        $task = Task::with($relatedTables)->where('status', $status)->get();
         return $task;
     }
     public function storeTask(TaskDTO $taskDTO): Task

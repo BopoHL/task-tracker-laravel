@@ -1,21 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Users;
 
 use App\DTO\UserDTO;
 use App\Exceptions\AlreadyExistException;
 use App\Exceptions\NotFoundException;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
-use App\Models\User;
-use App\Repositories\UserRepository;
 use App\Services\UserService;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class UserController extends Controller
 {
@@ -39,28 +35,28 @@ class UserController extends Controller
      * Store a newly created resource in storage.
      * @throws AlreadyExistException
      */
-    public function store(CreateUserRequest $request): JsonResponse
+    public function store(CreateUserRequest $request): UserResource
     {
         $validated = $request->validated();
         $user = $this->service->createUser(UserDTO::fromArray($validated));
-        return response()->json(new UserResource($user));
+        return new UserResource($user);
     }
 
     /**
      * Display the specified resource.
      * @throws NotFoundException
      */
-    public function show(string $userId): JsonResponse
+    public function show(int $userId): UserResource
     {
         $user = $this->service->getUserById($userId, 'projects.tasks');
-        return response()->json(new UserResource($user));
+        return new UserResource($user);
     }
 
     /**
      * Update the specified resource in storage.
      * @throws NotFoundException
      */
-    public function update(UpdateUserRequest $request, string $userId): UserResource
+    public function update(UpdateUserRequest $request, int $userId): UserResource
     {
         $validated = $request->validated();
 
@@ -73,7 +69,7 @@ class UserController extends Controller
      * Remove the specified resource from storage.
      * @throws NotFoundException
      */
-    public function destroy(string $userId): JsonResponse
+    public function destroy(int $userId): JsonResponse
     {
         $result = $this->service->deleteUser($userId);
 

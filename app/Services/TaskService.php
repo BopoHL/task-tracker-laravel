@@ -25,7 +25,7 @@ class TaskService
     /**
      * @throws NotFoundException
      */
-    public function getTaskById(string $taskId, string|array $relatedTables = []): Task
+    public function getTaskById(int $taskId, string|array $relatedTables = []): Task
     {
         $task = $this->repository->getTaskById($taskId, $relatedTables);
         if ($task === null) {
@@ -55,7 +55,7 @@ class TaskService
     /**
      * @throws NotFoundException
      */
-    public function updateTask(TaskDTO $taskDTO, string $taskId): Task
+    public function updateTask(TaskDTO $taskDTO, int $taskId): Task
     {
         $task = $this->getTaskById($taskId);
         $taskName = $taskDTO->getTaskName();
@@ -76,7 +76,7 @@ class TaskService
     /**
      * @throws NotFoundException
      */
-    public function deleteTask(string $taskId): string
+    public function deleteTask(int $taskId): string
     {
         $task = $this->getTaskById($taskId);
 

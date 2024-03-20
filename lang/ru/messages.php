@@ -11,4 +11,5 @@ return [
     'link' => 'ссылка',
     'token_expired' => 'Срок жизни токена истек',
     'delete_successful' => 'Успешно удалено',
+    'invalid_operation' => 'Некорректная операция',
 ];

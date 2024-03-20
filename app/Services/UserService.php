@@ -30,7 +30,7 @@ class UserService
     /**
      * @throws NotFoundException
      */
-    public function getUserById(string $userId, string|array $relatedTables = []): ?User
+    public function getUserById(int $userId, string|array $relatedTables = []): ?User
     {
         $user = $this->repository->getUserById($userId, $relatedTables);
         if ($user === null) {
@@ -81,7 +81,7 @@ class UserService
     /**
      * @throws NotFoundException
      */
-    public function updateUser(UserDTO $userDTO, string $userId): User
+    public function updateUser(UserDTO $userDTO, int $userId): User
     {
         $user = $this->getUserById($userId);
 
@@ -114,7 +114,7 @@ class UserService
     /**
      * @throws NotFoundException
      */
-    public function deleteUser(string $userId): string
+    public function deleteUser(int $userId): string
     {
         $user = $this->getUserById($userId);
 

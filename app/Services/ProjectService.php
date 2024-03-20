@@ -11,52 +11,56 @@ use Illuminate\Database\Eloquent\Collection;
 
 class ProjectService
 {
-    public function __construct(private readonly IProjectRepository $repository)
+    /**
+     * @param IProjectRepository $projectRepository
+     * @param UserService $userService
+     */
+    public function __construct(
+        private readonly IProjectRepository $projectRepository,
+        private readonly UserService        $userService,
+    )
     {
-
-    }
-
-    public function getAllProjects(): LengthAwarePaginator
-    {
-        return $this->repository->getAllProjects();
     }
 
     /**
      * @throws NotFoundException
      */
-    public function getProjectById(string $projectId, string|array $relatedTables = []): Project
+    public function getAllUserProjects(int $userId): Collection
     {
-        $project = $this->repository->getProjectById($projectId, $relatedTables);
+        $user = $this->userService->getUserById($userId);
+
+        return $user->projects()->get();
+    }
+
+    /**
+     * @throws NotFoundException
+     */
+    public function getUserProjectById(int $userId, int $projectId, string|array $relatedTables =
+    []): Project
+    {
+        $user = $this->userService->getUserById($userId);
+        $project = $user->projects()->with($relatedTables)->where('project_id', $projectId)->first();
         if ($project === null) {
             throw new NotFoundException('Project ' . __('messages.with_id_not_found'));
         }
-
         return $project;
     }
 
     /**
      * @throws NotFoundException
      */
-    public function getProjectByName(string $projectName, string|array $relatedTables = []): Project
+    public function createProject(ProjectDTO $projectDTO, int $userId): Project
     {
-        $project = $this->repository->getProjectByName($projectName, $relatedTables);
-        if ($project === null) {
-            throw new NotFoundException('Project ' . __('messages.with_name_not_found'));
-        }
-        return $project;
-    }
-
-    public function createProject(ProjectDTO $projectDTO): Project
-    {
-        return $this->repository->storeProject($projectDTO);
+        $user = $this->userService->getUserById($userId);
+        return $this->projectRepository->storeProject(user: $user, projectDTO: $projectDTO);
     }
 
     /**
      * @throws NotFoundException
      */
-    public function updateProject(ProjectDTO $projectDTO, string $projectId): Project
+    public function updateUserProject(ProjectDTO $projectDTO, int $userId, int $projectId): Project
     {
-        $project = $this->getProjectById($projectId);
+        $project = $this->getUserProjectById(userId: $userId, projectId: $projectId);
         $projectName = $projectDTO->getProjectName();
         $projectDescription = $projectDTO->getProjectDescription();
 
@@ -75,9 +79,12 @@ class ProjectService
     /**
      * @throws NotFoundException
      */
-    public function deleteProject(string $projectId): string
+    public function deleteUserProject(int $userId, int $projectId): string
     {
-        $project = $this->getProjectById($projectId);
+        $project = $this->getUserProjectById(
+            userId: $userId,
+            projectId: $projectId
+        );
 
         $project->delete();
         return __('messages.delete_successful');

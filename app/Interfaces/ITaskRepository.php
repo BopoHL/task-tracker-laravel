@@ -10,11 +10,11 @@ interface ITaskRepository
 {
     public function getAllTasks(): LengthAwarePaginator;
 
-    public function getTaskById(string $taskId, string|array $relatedTables): ?Task;
+    public function getTaskById(int $taskId, string|array $relatedTables): ?Task;
 
-    public function getTasksByProject(string $projectId, string|array $relatedTables): ?Task;
+    public function getTasksByProject(int $projectId, string|array $relatedTables): ?Task;
 
-    public function getTasksByAssigner(string $assignerId, string|array $relatedTables): ?Task;
+    public function getTasksByAssigner(int $assignerId, string|array $relatedTables): ?Task;
 
     public function getTaskByName(string $taskName, string|array $relatedTables): ?Task;
 
