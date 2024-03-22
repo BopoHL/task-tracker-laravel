@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Exceptions\InvalidOperationException;
 use App\Exceptions\NotFoundException;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LoginRequest;
 use App\Http\Resources\UserResource;
 use App\Services\UserService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -37,19 +40,40 @@ class AuthController extends Controller
         }
     }
 
-    public function login(Request $request)
+    /**
+     * @throws InvalidOperationException
+     */
+    public function login(LoginRequest $request)
     {
-        $validated = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string|min:6'
-        ]);
+        $validated = $request->validated();
 
         if (Auth::validate([
             'email' => $validated['email'],
             'password' => $validated['password'],
         ])) {
-            $user = Auth::user();
-//            if () {}
+            $user = Auth::getLastAttempted();
+            if ($user->email_verified_at !== null) {
+                Auth::login($user);
+                $token = $user->createToken('auth_token')->plainTextToken;
+                cache(['user' . $validated['email'] . ':token' => $token], now()->addHours(24));
+
+                return response()->json(['token' => $token]);
+            } else {
+                throw new InvalidOperationException(__('messages.email_not_confirmed'));
+            }
+        }
+    }
+
+    /**
+     * @throws InvalidOperationException
+     */
+    public function logout(): JsonResponse
+    {
+        if (auth()->check()) {
+            Auth::user()->tokens()->delete();
+            return response()->json(['message' => __('messages.logout_complete')], 200);
+        } else {
+            throw new InvalidOperationException(__('messages.not_login'));
         }
     }
 }

@@ -24,7 +24,6 @@ class ProjectController extends Controller
         private readonly ProjectService $projectService,
     )
     {
-
     }
 
     /**
@@ -46,7 +45,7 @@ class ProjectController extends Controller
         $validated = $request->validated();
         $project = $this->projectService
             ->createProject(
-                ProjectDTO::fromArray($validated),
+                projectDTO: ProjectDTO::fromArray($validated),
                 userId: $userId
             );
         return new ProjectResource($project);
@@ -74,11 +73,12 @@ class ProjectController extends Controller
     public function update(int $userId, ProjectRequest $request, int $projectId): ProjectResource
     {
         $validated = $request->validated();
+
         $project = $this->projectService
             ->updateUserProject(
-                ProjectDTO::fromArray($validated),
+                projectDTO: ProjectDTO::fromArray($validated),
                 userId: $userId,
-                projectId: $projectId
+                projectId: $projectId,
             );
         return new ProjectResource($project);
     }
@@ -90,7 +90,11 @@ class ProjectController extends Controller
      */
     public function destroy(int $userId, int $projectId): JsonResponse
     {
-        $result = $this->projectService->deleteUserProject(userId: $userId, projectId: $projectId);
+        $result = $this->projectService
+            ->deleteUserProject(
+                userId: $userId,
+                projectId: $projectId
+            );
         return response()->json(['message' => $result]);
     }
 

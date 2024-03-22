@@ -15,7 +15,7 @@ class AddUserToProjectService
      */
     public function __construct(
         private readonly UserService    $userService,
-        private readonly ProjectService $projectService
+        private readonly ProjectService $projectService,
     )
     {
 
