@@ -15,11 +15,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-//        User::factory(100000)
+//        User::factory(9990)
 //            ->hasAttached(Project::factory(),
 //                 ['role' => 'contributor'])
 //            ->create();
 
-        Task::factory(100000)->create();
+        Task::factory(10106)->create();
     }
 }

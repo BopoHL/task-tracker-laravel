@@ -41,6 +41,8 @@ Route::get('users/{user_id}/projects/{project_id}/tasks', [TaskController::class
 Route::get('users/{user_id}/projects/{project_id}/tasks/{task_id}', [TaskController::class, 'show']);
 Route::match(['put', 'patch'], 'users/{user_id}/projects/{project_id}/tasks/{task_id}', [TaskController::class, 'update']);
 Route::delete('users/{user_id}/projects/{project_id}/tasks/{task_id}', [TaskController::class, 'destroy']);
+Route::post('users/{user_id}/projects/{project_id}/tasks/{task_id}/add-member', [TaskController::class, 'addMember']);
+
 
 
 

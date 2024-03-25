@@ -3,12 +3,14 @@
 namespace App\Interfaces;
 
 use App\DTO\TaskDTO;
+use App\Models\Project;
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 interface ITaskRepository
 {
-    public function getAllTasks(): LengthAwarePaginator;
+    public function getAllUserTasks(): LengthAwarePaginator;
 
     public function getTaskById(int $taskId, string|array $relatedTables): ?Task;
 
@@ -22,6 +24,6 @@ interface ITaskRepository
 
     public function getTasksByStatus(string $status, string|array $relatedTables): ?Task;
 
-    public function storeTask(TaskDTO $taskDTO): Task;
+    public function storeTask(User $user, TaskDTO $taskDTO): Task;
 
 }
