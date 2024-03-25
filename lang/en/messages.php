@@ -6,10 +6,13 @@ return [
     'with_email_already_exist' => 'with this email already exist',
     'something_went_wrong' => 'Something went wrong =(',
     'email_confirmation' => 'Email confirmation',
+    'email_not_confirmed' => 'Email not confirmed',
     'thanks' => 'Thank You',
     'finish_register' => 'To complete registration please follow the following link:',
     'link' => 'link',
     'token_expired' => 'Token expired',
     'delete_successful' => 'Delete was successful',
     'invalid_operation' => 'This operation is invalid',
+    'logout_complete' => 'Logout was complete',
+    'not_login' => 'User is not login',
 ];
