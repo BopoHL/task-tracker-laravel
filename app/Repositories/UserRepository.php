@@ -34,17 +34,8 @@ class UserRepository implements IUserRepository
         return $user;
     }
 
-    public function storeUser(UserDTO $userDTO): User
+    public function storeUser(User $user): void
     {
-        $user = new User();
-        $user->name = $userDTO->getName();
-        $user->email = $userDTO->getEmail();
-        $user->password = bcrypt($userDTO->getPassword());
-        $user->date_of_birth = $userDTO->getDateOfBirth();
-        $user->avatar_url = $userDTO->getAvatarUrl();
-
         $user->save();
-
-        return $user;
     }
 }

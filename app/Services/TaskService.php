@@ -108,7 +108,7 @@ class TaskService
         $user = $this->userService->getUserById($userId);
         $task = $user->tasks()->where('id', $taskId)->first();
         if ($task === null) {
-            throw new NotFoundException('Task ' . __('messages.with_id_not_found'));
+            throw new NotFoundException('Task ' . __('messages.with_id_not_found'), 404);
         }
         return $task;
     }

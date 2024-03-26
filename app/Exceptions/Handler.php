@@ -20,9 +20,15 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $e)
     {
-        $statusCode = $e instanceof \HttpException
-            ? $e->getCode()
-            : 500;
+        if (
+            $e instanceof AlreadyExistException
+            || $e instanceof NotFoundException
+            || $e instanceof InvalidOperationException
+        ) {
+            $statusCode = $e->getCode();
+        } else {
+            $statusCode = 500;
+        }
 
         return response(['error' => [
             'code' => $statusCode,

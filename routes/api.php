@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\RegisterLogin\RegisterLoginController;
 use App\Http\Controllers\Projects\ProjectController;
 use App\Http\Controllers\Tasks\TaskController;
 use App\Http\Controllers\Users\UserController;
@@ -21,27 +21,42 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
-Route::get('/confirm-email/{token}', [AuthController::class, 'confirmEmail'])->name('confirm-email');
+Route::post('/register', [RegisterLoginController::class, 'register']);
+Route::get('/confirm-email/{token}', [RegisterLoginController::class, 'confirmUserEmail'])->name('confirm-email');
+Route::post('/login', [RegisterLoginController::class, 'login']);
+Route::post('/logout', [RegisterLoginController::class, 'logout'])->middleware(['auth:sanctum']);
 
-Route::post('/users', [UserController::class, 'store']);
-Route::get('/users', [UserController::class, 'index']);
-Route::get('/users/{user_id}', [UserController::class, 'show']);
-Route::match(['put', 'patch'], '/users/{user_id}', [UserController::class, 'update']);
-Route::delete('users/{user_id}', [UserController::class, 'destroy']);
+Route::prefix('/users')->middleware(['auth:sanctum'])->group(function () {
 
-Route::post('users/{user_id}/projects', [ProjectController::class, 'store']);
-Route::get('users/{user_id}/projects', [ProjectController::class, 'index']);
-Route::get('users/{user_id}/projects/{project_id}', [ProjectController::class, 'show']);
-Route::match(['put', 'patch'], 'users/{user_id}/projects/{project_id}', [ProjectController::class, 'update']);
-Route::delete('users/{user_id}/projects/{project_id}', [ProjectController::class, 'destroy']);
-Route::post('users/{user_id}/projects/{project_id}/add-member', [ProjectController::class, 'addMember']);
+Route::get('/', [UserController::class, 'show']);
+Route::match(['put', 'patch'], '/', [UserController::class, 'update']);
+Route::delete('/', [UserController::class, 'destroy']);
+Route::get('/search', [UserController::class, 'index']);
 
-Route::post('users/{user_id}/projects/{project_id}/tasks', [TaskController::class, 'store']);
-Route::get('users/{user_id}/projects/{project_id}/tasks', [TaskController::class, 'index']);
-Route::get('users/{user_id}/projects/{project_id}/tasks/{task_id}', [TaskController::class, 'show']);
-Route::match(['put', 'patch'], 'users/{user_id}/projects/{project_id}/tasks/{task_id}', [TaskController::class, 'update']);
-Route::delete('users/{user_id}/projects/{project_id}/tasks/{task_id}', [TaskController::class, 'destroy']);
-Route::post('users/{user_id}/projects/{project_id}/tasks/{task_id}/add-member', [TaskController::class, 'addMember']);
+});
+
+Route::prefix('/projects')->middleware(['auth:sanctum'])->group(function () {
+
+Route::post('/create', [ProjectController::class, 'store']);
+Route::get('/show', [ProjectController::class, 'show']);
+Route::match(['put', 'patch'], '/update', [ProjectController::class, 'update']);
+Route::delete('/delete', [ProjectController::class, 'destroy']);
+Route::get('/search', [ProjectController::class, 'index']);
+Route::post('/add-member', [ProjectController::class, 'addMember']);
+
+});
+
+Route::prefix('/tasks')->middleware(['auth:sanctum'])->group(function () {
+
+Route::post('/create', [TaskController::class, 'store']);
+Route::get('/show', [TaskController::class, 'show']);
+Route::match(['put', 'patch'], '/update', [TaskController::class, 'update']);
+Route::delete('/delete', [TaskController::class, 'destroy']);
+Route::get('/search', [TaskController::class, 'index']);
+Route::post('/add-member', [TaskController::class, 'addMember']);
+
+});
+
 
 
 

@@ -6,10 +6,10 @@ use App\DTO\UserDTO;
 use App\Exceptions\AlreadyExistException;
 use App\Exceptions\NotFoundException;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\RegisterRequest;
-use App\Http\Requests\UpdateUserRequest;
-use App\Http\Resources\UserCollection;
-use App\Http\Resources\UserResource;
+use App\Http\Requests\Users\RegisterRequest;
+use App\Http\Requests\Users\UpdateUserRequest;
+use App\Http\Resources\Users\UserCollection;
+use App\Http\Resources\Users\UserResource;
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
 
@@ -30,19 +30,6 @@ class UserController extends Controller
     {
         $users = $this->service->getAllUsers();
         return new UserCollection($users);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     * @throws AlreadyExistException
-     */
-    public function store(RegisterRequest $request): UserResource
-    {
-        $validated = $request->validated();
-        $user = $this->service->createUser(
-            userDTO: UserDTO::fromArray($validated),
-        );
-        return new UserResource($user);
     }
 
     /**

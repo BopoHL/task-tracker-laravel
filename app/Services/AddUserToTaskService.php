@@ -40,7 +40,7 @@ class AddUserToTaskService
             $task->users()->attach($user, ['role' => $role]);
             return $task->users()->withPivot('role')->get();
         } else {
-            throw new InvalidOperationException(__('messages.invalid_operation'));
+            throw new InvalidOperationException(__('messages.invalid_operation'), 403);
         }
     }
 }

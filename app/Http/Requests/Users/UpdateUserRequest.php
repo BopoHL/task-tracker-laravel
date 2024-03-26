@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Users;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProjectRequest extends FormRequest
+class UpdateUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,12 @@ class ProjectRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'project_name' => 'string|required|max:100',
-            'project_description' => 'string|nullable|max:400',
+            'name' => 'nullable|string|max:50',
+            'email' => 'nullable|email|unique:users,email',
+            'password' => 'nullable|string|min:6|confirmed',
+            'date_of_birth' => 'nullable|date|before_or_equal:today',
+            'avatar_url' => 'nullable|string',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ];
     }
 }

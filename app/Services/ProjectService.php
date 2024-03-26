@@ -41,7 +41,7 @@ class ProjectService
         $user = $this->userService->getUserById($userId);
         $project = $user->projects()->with($relatedTables)->where('project_id', $projectId)->first();
         if ($project === null) {
-            throw new NotFoundException('Project ' . __('messages.with_id_not_found'));
+            throw new NotFoundException('Project ' . __('messages.with_id_not_found'), 404);
         }
         return $project;
     }

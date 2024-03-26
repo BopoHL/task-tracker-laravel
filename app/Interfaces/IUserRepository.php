@@ -15,5 +15,5 @@ interface IUserRepository
 
     public function getUserByEmail(string $email, string|array $relatedTables): User|null;
 
-    public function storeUser(UserDTO $userDTO): User;
+    public function storeUser(User $user): void;
 }
