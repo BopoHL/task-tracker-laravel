@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\DTO\LoginDTO;
-use App\DTO\UserDTO;
+use App\DTO\Users\LoginUserDTO;
+use App\DTO\Users\CreateUserDTO;
 use App\Exceptions\AlreadyExistException;
 use App\Exceptions\InvalidOperationException;
 use App\Exceptions\NotFoundException;
@@ -26,7 +26,7 @@ class RegisterLoginService
     /**
      * @throws AlreadyExistException
      */
-    public function registerUser(UserDTO $userDTO): JsonResponse
+    public function registerUser(CreateUserDTO $userDTO): JsonResponse
     {
         $userEmail = $userDTO->getEmail();
         $user = $this->userRepository->getUserByEmail(email: $userEmail, relatedTables: []);
@@ -76,7 +76,7 @@ class RegisterLoginService
     /**
      * @throws InvalidOperationException
      */
-    public function login(LoginDTO $loginDTO): JsonResponse
+    public function login(LoginUserDTO $loginDTO): JsonResponse
     {
         $email = $loginDTO->getEmail();
         $password = $loginDTO->getPassword();
@@ -88,7 +88,6 @@ class RegisterLoginService
             if ($user->email_verified_at !== null) {
                 Auth::login($user);
                 $token = $user->createToken('auth_token')->plainTextToken;
-//                cache(['user' . $validated['email'] . ':token' => $token], now()->addHours(24));
 
                 return response()->json(['token' => $token]);
             } else {

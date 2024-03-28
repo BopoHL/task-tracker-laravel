@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Projects;
 
-use App\DTO\ProjectDTO;
+use App\DTO\Projects\ProjectDTO;
 use App\Exceptions\InvalidOperationException;
 use App\Exceptions\NotFoundException;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Projects\AddUserToProjectRequest;
 use App\Http\Requests\Projects\ProjectRequest;
 use App\Http\Resources\Projects\ProjectCollection;
 use App\Http\Resources\Projects\ProjectResource;
@@ -14,6 +15,7 @@ use App\Services\AddUserToProjectService;
 use App\Services\ProjectService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ProjectController extends Controller
 {
@@ -30,23 +32,22 @@ class ProjectController extends Controller
      * Display a listing of the resource.
      * @throws NotFoundException
      */
-    public function index(int $userId): ProjectCollection
+    public function index(): AnonymousResourceCollection
     {
-        $projects = $this->projectService->getAllUserProjects($userId);
-        return new ProjectCollection($projects);
+        $projects = $this->projectService->getAllUserProjects();
+        return ProjectResource::collection($projects);
     }
 
     /**
      * Show the form for creating a new resource.
      * @throws NotFoundException
      */
-    public function store(int $userId, ProjectRequest $request): ProjectResource
+    public function store(ProjectRequest $request): ProjectResource
     {
         $validated = $request->validated();
         $project = $this->projectService
             ->createProject(
                 projectDTO: ProjectDTO::fromArray($validated),
-                userId: $userId
             );
         return new ProjectResource($project);
     }
@@ -55,11 +56,10 @@ class ProjectController extends Controller
      * Display the specified resource.
      * @throws NotFoundException
      */
-    public function show(int $userId, int $projectId): ProjectResource
+    public function show(int $projectId): ProjectResource
     {
         $project = $this->projectService
             ->getUserProjectById(
-                userId: $userId,
                 projectId: $projectId,
                 relatedTables: ['tasks.assigner', 'users']
             );
@@ -70,14 +70,13 @@ class ProjectController extends Controller
      * Update the specified resource in storage.
      * @throws NotFoundException
      */
-    public function update(int $userId, ProjectRequest $request, int $projectId): ProjectResource
+    public function update(ProjectRequest $request, int $projectId): ProjectResource
     {
         $validated = $request->validated();
 
         $project = $this->projectService
             ->updateUserProject(
                 projectDTO: ProjectDTO::fromArray($validated),
-                userId: $userId,
                 projectId: $projectId,
             );
         return new ProjectResource($project);
@@ -88,11 +87,10 @@ class ProjectController extends Controller
      * Remove the specified resource from storage.
      * @throws NotFoundException
      */
-    public function destroy(int $userId, int $projectId): JsonResponse
+    public function destroy(int $projectId): JsonResponse
     {
         $result = $this->projectService
             ->deleteUserProject(
-                userId: $userId,
                 projectId: $projectId
             );
         return response()->json(['message' => $result]);
@@ -102,23 +100,18 @@ class ProjectController extends Controller
      * @throws NotFoundException|InvalidOperationException
      */
     public function addMember(
-        int                     $userId,
         int                     $projectId,
-        Request                 $request,
-        AddUserToProjectService $service
+        AddUserToProjectRequest $request,
     ): ProjectUsersCollection
     {
-        $validated = $request->validate([
-                'email' => 'required|email',
-                'role' => 'required|string|in:owner,manager,contributor',
-            ]
-        );
-        $projectUsers = $service->addUserToProject(
-            managerId: $userId,
+        $validated = $request->validated();
+
+        $projectUsers = $this->projectService->addUserToProject(
             userEmail: $validated['email'],
             role: $validated['role'],
             projectId: $projectId,
         );
+
         return new ProjectUsersCollection($projectUsers);
     }
 }

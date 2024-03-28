@@ -2,16 +2,11 @@
 
 namespace App\Services;
 
-use App\DTO\UserDTO;
-use App\Exceptions\AlreadyExistException;
+use App\DTO\Users\UpdateUserDTO;
+use App\DTO\Users\CreateUserDTO;
 use App\Exceptions\NotFoundException;
 use App\Interfaces\IUserRepository;
-use App\Jobs\SendConfirmEmail;
 use App\Models\User;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Str;
 
 class UserService
 {
@@ -22,10 +17,6 @@ class UserService
     {
     }
 
-    public function getAllUsers(): LengthAwarePaginator
-    {
-        return $this->repository->getAllUsers();
-    }
 
     /**
      * @throws NotFoundException
@@ -57,19 +48,14 @@ class UserService
     /**
      * @throws NotFoundException
      */
-    public function updateUser(UserDTO $userDTO, int $userId): User
+    public function updateUser(UpdateUserDTO $userDTO): User
     {
-        $user = $this->getUserById($userId);
+        $user = $this->getAuthUser();
 
-        $email = $userDTO->getEmail();
         $name = $userDTO->getName();
         $avatarUrl = $userDTO->getAvatarUrl();
         $dateOfBirth = $userDTO->getDateOfBirth();
-        $password = $userDTO->getPassword();
 
-        if ($email !== null) {
-            $user->email = $email;
-        }
         if ($name !== null) {
             $user->name = $name;
         }
@@ -79,22 +65,23 @@ class UserService
         if ($dateOfBirth !== null) {
             $user->date_of_birth = $dateOfBirth;
         }
-        if ($password !== null) {
-            $user->password = $password;
-        }
 
-        $user->save();
+        $this->repository->storeUser($user);
         return $user;
     }
 
     /**
      * @throws NotFoundException
      */
-    public function deleteUser(int $userId): string
+    public function getAuthUser(): User
     {
-        $user = $this->getUserById($userId);
+        $user = $this->repository->getAuthUser();
 
-        $user->delete();
-        return __('messages.delete_successful');
+        if ($user === null) {
+            throw new NotFoundException('messages.not_login');
+        }
+
+        return $user;
     }
+
 }

@@ -2,12 +2,11 @@
 
 namespace App\Repositories;
 
-use App\DTO\TaskDTO;
+use App\DTO\Tasks\TaskDTO;
 use App\Interfaces\ITaskRepository;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
 class TaskRepository implements ITaskRepository

@@ -2,8 +2,7 @@
 
 namespace App\Interfaces;
 
-use App\DTO\TaskDTO;
-use App\Models\Project;
+use App\DTO\Tasks\TaskDTO;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;

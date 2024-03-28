@@ -2,10 +2,9 @@
 
 namespace App\Interfaces;
 
-use App\DTO\UserDTO;
 use App\Models\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Collection;
 
 interface IUserRepository
 {
@@ -16,4 +15,6 @@ interface IUserRepository
     public function getUserByEmail(string $email, string|array $relatedTables): User|null;
 
     public function storeUser(User $user): void;
+
+    public function getAuthUser(): User|Authenticatable|null;
 }

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\DTO;
+namespace App\DTO\Users;
 
-class LoginDTO
+class LoginUserDTO
 {
     /**
      * @param string $email

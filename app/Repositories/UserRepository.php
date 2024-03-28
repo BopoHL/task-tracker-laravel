@@ -2,11 +2,11 @@
 
 namespace App\Repositories;
 
-use App\DTO\UserDTO;
 use App\Interfaces\IUserRepository;
 use App\Models\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 
@@ -27,7 +27,7 @@ class UserRepository implements IUserRepository
         return $user;
     }
 
-    public function getUserByEmail(string $email, string|array $relatedTables): ?User
+    public function getUserByEmail(string $email, string|array $relatedTables): User|null
     {
         /** @var User|null $user */
         $user = User::with($relatedTables)->where('email', $email)->first();
@@ -37,5 +37,10 @@ class UserRepository implements IUserRepository
     public function storeUser(User $user): void
     {
         $user->save();
+    }
+
+    public function getAuthUser(): User|Authenticatable|null
+    {
+        return Auth::user();
     }
 }

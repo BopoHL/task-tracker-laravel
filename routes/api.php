@@ -6,54 +6,42 @@ use App\Http\Controllers\Tasks\TaskController;
 use App\Http\Controllers\Users\UserController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
 
-//Route::middleware('auth:sanctum')->get('/project', function (Request $request) {
-//    return $request->user();
-//});
-
+// Registration/login
 Route::post('/register', [RegisterLoginController::class, 'register']);
 Route::get('/confirm-email/{token}', [RegisterLoginController::class, 'confirmUserEmail'])->name('confirm-email');
 Route::post('/login', [RegisterLoginController::class, 'login']);
 Route::post('/logout', [RegisterLoginController::class, 'logout'])->middleware(['auth:sanctum']);
 
-Route::prefix('/users')->middleware(['auth:sanctum'])->group(function () {
+// User
+Route::middleware(['auth:sanctum'])->group(function () {
 
-Route::get('/', [UserController::class, 'show']);
-Route::match(['put', 'patch'], '/', [UserController::class, 'update']);
-Route::delete('/', [UserController::class, 'destroy']);
-Route::get('/search', [UserController::class, 'index']);
+    Route::get('/me', [UserController::class, 'me']);
+    Route::match(['put', 'patch'], '/me', [UserController::class, 'updateMe']);
 
 });
 
+// Projects
 Route::prefix('/projects')->middleware(['auth:sanctum'])->group(function () {
 
-Route::post('/create', [ProjectController::class, 'store']);
-Route::get('/show', [ProjectController::class, 'show']);
-Route::match(['put', 'patch'], '/update', [ProjectController::class, 'update']);
-Route::delete('/delete', [ProjectController::class, 'destroy']);
-Route::get('/search', [ProjectController::class, 'index']);
-Route::post('/add-member', [ProjectController::class, 'addMember']);
+    Route::post('/', [ProjectController::class, 'store']);
+    Route::get('/{id}', [ProjectController::class, 'show']);
+    Route::match(['put', 'patch'], '/{id}', [ProjectController::class, 'update']);
+    Route::delete('/{id}', [ProjectController::class, 'destroy']);
+    Route::get('/', [ProjectController::class, 'index']);
+    Route::post('/{id}/users', [ProjectController::class, 'addMember']);
 
 });
 
+// Tasks
 Route::prefix('/tasks')->middleware(['auth:sanctum'])->group(function () {
 
-Route::post('/create', [TaskController::class, 'store']);
-Route::get('/show', [TaskController::class, 'show']);
-Route::match(['put', 'patch'], '/update', [TaskController::class, 'update']);
-Route::delete('/delete', [TaskController::class, 'destroy']);
-Route::get('/search', [TaskController::class, 'index']);
-Route::post('/add-member', [TaskController::class, 'addMember']);
+    Route::post('/', [TaskController::class, 'store']);
+    Route::get('/{id}', [TaskController::class, 'show']);
+    Route::match(['put', 'patch'], '/{id}', [TaskController::class, 'update']);
+    Route::delete('/{id}', [TaskController::class, 'destroy']);
+    Route::get('/', [TaskController::class, 'index']);
+    Route::post('/{id}/users', [TaskController::class, 'addMember']);
 
 });
 

@@ -2,16 +2,12 @@
 
 namespace App\Http\Controllers\Users;
 
-use App\DTO\UserDTO;
-use App\Exceptions\AlreadyExistException;
+use App\DTO\Users\UpdateUserDTO;
 use App\Exceptions\NotFoundException;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Users\RegisterRequest;
 use App\Http\Requests\Users\UpdateUserRequest;
-use App\Http\Resources\Users\UserCollection;
 use App\Http\Resources\Users\UserResource;
 use App\Services\UserService;
-use Illuminate\Http\JsonResponse;
 
 class UserController extends Controller
 {
@@ -24,24 +20,12 @@ class UserController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
-     */
-    public function index(): UserCollection
-    {
-        $users = $this->service->getAllUsers();
-        return new UserCollection($users);
-    }
-
-    /**
      * Display the specified resource.
      * @throws NotFoundException
      */
-    public function show(int $userId): UserResource
+    public function me(): UserResource
     {
-        $user = $this->service->getUserById(
-            userId: $userId,
-            relatedTables: 'projects.tasks',
-        );
+        $user = $this->service->getAuthUser();
         return new UserResource($user);
     }
 
@@ -49,26 +33,15 @@ class UserController extends Controller
      * Update the specified resource in storage.
      * @throws NotFoundException
      */
-    public function update(UpdateUserRequest $request, int $userId): UserResource
+    public function updateMe(UpdateUserRequest $request): UserResource
     {
         $validated = $request->validated();
 
         $user = $this->service->updateUser(
-            userDTO: UserDTO::fromArray($validated),
-            userId: $userId,
+            userDTO: UpdateUserDTO::fromArray($validated),
         );
 
         return new UserResource($user);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     * @throws NotFoundException
-     */
-    public function destroy(int $userId): JsonResponse
-    {
-        $result = $this->service->deleteUser(userId: $userId);
-
-        return response()->json(['message' => $result]);
-    }
 }

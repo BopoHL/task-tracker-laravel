@@ -2,10 +2,9 @@
 
 namespace App\Services;
 
-use App\DTO\TaskDTO;
+use App\DTO\Tasks\TaskDTO;
 use App\Exceptions\NotFoundException;
 use App\Interfaces\ITaskRepository;
-use App\Models\Project;
 use App\Models\Task;
 use Illuminate\Database\Eloquent\Collection;
 

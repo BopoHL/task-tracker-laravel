@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Tasks;
 
-use App\DTO\TaskDTO;
+use App\DTO\Tasks\TaskDTO;
 use App\Exceptions\InvalidOperationException;
 use App\Exceptions\NotFoundException;
 use App\Http\Controllers\Controller;

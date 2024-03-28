@@ -2,11 +2,9 @@
 
 namespace App\Interfaces;
 
-use App\DTO\ProjectDTO;
+use App\DTO\Projects\ProjectDTO;
 use App\Models\Project;
 use App\Models\User;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Collection;
 
 interface IProjectRepository
 {
@@ -17,5 +15,7 @@ interface IProjectRepository
     $relatedTables):
     ?Project;
 
-    public function storeProject(User $user, ProjectDTO $projectDTO): Project;
+    public function storeProject(Project $project): void;
+
+    public function destroyProject(Project $project): void;
 }
