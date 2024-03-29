@@ -8,13 +8,11 @@ use App\Exceptions\NotFoundException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Projects\AddUserToProjectRequest;
 use App\Http\Requests\Projects\ProjectRequest;
-use App\Http\Resources\Projects\ProjectCollection;
 use App\Http\Resources\Projects\ProjectResource;
-use App\Http\Resources\ProjectUsersCollection;
-use App\Services\AddUserToProjectService;
+use App\Http\Resources\Projects\UserProjectResource;
+use App\Http\Resources\Users\ProjectUserResource;
 use App\Services\ProjectService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ProjectController extends Controller
@@ -35,7 +33,7 @@ class ProjectController extends Controller
     public function index(): AnonymousResourceCollection
     {
         $projects = $this->projectService->getAllUserProjects();
-        return ProjectResource::collection($projects);
+        return UserProjectResource::collection($projects);
     }
 
     /**
@@ -102,7 +100,7 @@ class ProjectController extends Controller
     public function addMember(
         int                     $projectId,
         AddUserToProjectRequest $request,
-    ): ProjectUsersCollection
+    ): AnonymousResourceCollection
     {
         $validated = $request->validated();
 
@@ -112,6 +110,6 @@ class ProjectController extends Controller
             projectId: $projectId,
         );
 
-        return new ProjectUsersCollection($projectUsers);
+        return ProjectUserResource::collection($projectUsers);
     }
 }

@@ -98,6 +98,7 @@ class ProjectService
 
         $allowedRoles = ['owner', 'manager'];
 
+        //Check for permission to add another users
         if (
             $authUser->projects()
             ->where('project_id', $projectId)
