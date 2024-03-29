@@ -4,7 +4,7 @@ namespace App\DTO\Tasks;
 
 use DateTime;
 
-class TaskDTO
+final class TaskDTO
 {
     /**
      * @param string|null $taskName

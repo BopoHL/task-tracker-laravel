@@ -4,7 +4,7 @@ namespace App\DTO\Users;
 
 use DateTime;
 
-class CreateUserDTO
+final class CreateUserDTO
 {
     /**
      * @param string $name

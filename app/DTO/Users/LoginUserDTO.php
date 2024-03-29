@@ -2,7 +2,7 @@
 
 namespace App\DTO\Users;
 
-class LoginUserDTO
+final class LoginUserDTO
 {
     /**
      * @param string $email

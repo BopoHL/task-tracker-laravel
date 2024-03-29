@@ -2,7 +2,7 @@
 
 namespace App\DTO\Projects;
 
-class ProjectDTO
+final class ProjectDTO
 {
     /**
      * @param string $projectName

@@ -4,7 +4,7 @@ namespace App\DTO\Users;
 
 use DateTime;
 
-class UpdateUserDTO
+final class UpdateUserDTO
 {
     /**
      * @param string|null $name
