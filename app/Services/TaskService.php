@@ -7,9 +7,7 @@ use App\Exceptions\NotFoundException;
 use App\Interfaces\ITaskRepository;
 use App\Interfaces\IUserRepository;
 use App\Models\Task;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class TaskService
 {
@@ -123,7 +121,7 @@ class TaskService
     /**
      * @throws NotFoundException
      */
-    public function addAssigner(int $projectId, int $taskId, string $email): User
+    public function addAssigner(int $projectId, int $taskId, string $email): Task
     {
         $project = $this->projectService->getUserProjectById($projectId);
 
@@ -139,7 +137,7 @@ class TaskService
 
         $this->taskRepository->storeTask($task);
 
-        return $task->assigner()->first();
+        return $task;
     }
 }
 

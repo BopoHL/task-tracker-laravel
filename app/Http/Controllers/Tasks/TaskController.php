@@ -3,14 +3,10 @@
 namespace App\Http\Controllers\Tasks;
 
 use App\DTO\Tasks\TaskDTO;
-use App\Exceptions\InvalidOperationException;
 use App\Exceptions\NotFoundException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tasks\TaskRequest;
-use App\Http\Resources\Tasks\TaskCollection;
 use App\Http\Resources\Tasks\TaskResource;
-use App\Http\Resources\TaskUsersCollection;
-use App\Http\Resources\Users\UserResource;
 use App\Services\TaskService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -98,14 +94,14 @@ class TaskController extends Controller
      * @param int $taskId
      * @param int $projectId
      * @param Request $request
-     * @return UserResource
+     * @return TaskResource
      * @throws NotFoundException
      */
     public function addAssigner(
         int                  $taskId,
         int                  $projectId,
         Request              $request,
-    ): UserResource
+    ): TaskResource
     {
         $validated = $request->validate([
                 'email' => 'required|email',
@@ -114,9 +110,9 @@ class TaskController extends Controller
 
         $email = $validated['email'];
 
-        $assigner = $this->taskService->addAssigner($taskId, $projectId, $email);
+        $task = $this->taskService->addAssigner($taskId, $projectId, $email);
 
-        return new UserResource($assigner);
+        return new TaskResource($task);
     }
 
 }
