@@ -11,7 +11,6 @@ use App\Http\Resources\Tasks\TaskCollection;
 use App\Http\Resources\Tasks\TaskResource;
 use App\Http\Resources\TaskUsersCollection;
 use App\Http\Resources\Users\UserResource;
-use App\Services\AddUserToTaskService;
 use App\Services\TaskService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
