@@ -12,6 +12,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
 /**
+ * @property int id
  * @property string name
  * @property string email
  * @property string password
@@ -21,8 +22,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property  DateTime|string created_at
  * @property  DateTime|string updated_at
  * @property string remember_token
- * @property Project[] $organizations
- * @property Task[] $tasks
+ * @property Project[] organizations
+ * @property Task[] tasks
  */
 class User extends Authenticatable
 {

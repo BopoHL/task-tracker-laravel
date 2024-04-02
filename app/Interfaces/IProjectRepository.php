@@ -8,14 +8,11 @@ use App\Models\User;
 
 interface IProjectRepository
 {
-    public function getProjectById(int $projectId, string|array $relatedTables):
-    ?Project;
+    public function getProjectById(int $projectId, string|array $relatedTables);
 
-    public function getProjectByName(string $projectName, string|array
-    $relatedTables):
-    ?Project;
+    public function getProjectByName(string $projectName, string|array $relatedTables);
 
-    public function storeProject(Project $project): void;
+    public function storeProject(Project $project);
 
-    public function destroyProject(Project $project): void;
+    public function destroyProject(Project $project);
 }

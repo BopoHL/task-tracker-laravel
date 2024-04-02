@@ -5,107 +5,44 @@ namespace App\Services;
 use App\DTO\Tasks\TaskDTO;
 use App\Exceptions\NotFoundException;
 use App\Interfaces\ITaskRepository;
+use App\Interfaces\IUserRepository;
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class TaskService
 {
     /**
      * @param ITaskRepository $taskRepository
-     * @param UserService $userService
+     * @param IUserRepository $userRepository
+     * @param ProjectService $projectService
      */
     public function __construct(
         private readonly ITaskRepository $taskRepository,
-        private readonly UserService        $userService,
+        private readonly IUserRepository $userRepository,
+        private readonly ProjectService  $projectService,
     )
     {
-    }
-
-//    public function getAllTasks(): LengthAwarePaginator
-//    {
-//        return $this->taskService->getAllTasks();
-//    }
-//
-//    /**
-//     * @throws NotFoundException
-//     */
-//    public function getTaskById(int $taskId, string|array $relatedTables = []): Task
-//    {
-//        $task = $this->taskService->getTaskById($taskId, $relatedTables);
-//        if ($task === null) {
-//            throw new NotFoundException('Task ' . __('messages.with_id_not_found'));
-//        }
-//
-//        return $task;
-//    }
-//
-//    /**
-//     * @throws NotFoundException
-//     */
-//    public function getTaskByName(string $taskName, string|array $relatedTables = []): Task
-//    {
-//        $task = $this->taskService->getTaskByName($taskName, $relatedTables);
-//        if ($task === null) {
-//            throw new NotFoundException('Task ' . __('messages.with_name_not_found'));
-//        }
-//        return $task;
-//    }
-//
-////    public function createTask(TaskDTO $taskDTO): Task
-////    {
-////        return $this->repository->storeTask($taskDTO);
-////    }
-//    public function createTask(TaskDTO $taskDTO, int $userId): Task
-//    {
-//        $user = $this->userService->getUserById($userId);
-//        return $this->taskRepository->storeTask(user: $user, taskDTO: $taskDTO);
-//    }
-//    /**
-//     * @throws NotFoundException
-//     */
-//    public function updateTask(TaskDTO $taskDTO, int $taskId): Task
-//    {
-//        $task = $this->getTaskById($taskId);
-//        $taskName = $taskDTO->getTaskName();
-//        $taskDescription = $taskDTO->getTaskDescription();
-//
-//        if ($taskName !== null) {
-//            $task->task_name = $taskName;
-//        }
-//
-//        if ($taskDescription !== null) {
-//            $task->task_description = $taskDescription;
-//        }
-//
-//        $task->save();
-//        return $task;
-//    }
-//
-//    /**
-//     * @throws NotFoundException
-//     */
-//    public function deleteTask(int $taskId): string
-//    {
-//        $task = $this->getTaskById($taskId);
-//
-//        $task->delete();
-//        return __('messages.delete_successful');
-//    }
-    public function getAllUserTasks(int $userId): Collection
-    {
-        $user = $this->userService->getUserById($userId);
-
-        return $user->tasks()->get();
     }
 
     /**
      * @throws NotFoundException
      */
-    public function getUserTaskById(int $userId, int $projectId, int $taskId, string|array $relatedTables =
-    []): object
+    public function getAllProjectTasks($projectId): Collection
     {
-        $user = $this->userService->getUserById($userId);
-        $task = $user->tasks()->where('id', $taskId)->first();
+        $project = $this->projectService->getUserProjectById($projectId);
+
+        return $this->taskRepository->getAllProjectTasks($project);
+    }
+
+    /**
+     * @throws NotFoundException
+     */
+    public function getProjectTaskById(int $projectId, int $taskId): Task
+    {
+        $project = $this->projectService->getUserProjectById($projectId);
+        $task = $this->taskRepository->getProjectTaskById($project, $taskId);
         if ($task === null) {
             throw new NotFoundException('Task ' . __('messages.with_id_not_found'), 404);
         }
@@ -115,50 +52,94 @@ class TaskService
     /**
      * @throws NotFoundException
      */
-    public function createTask(TaskDTO $taskDTO, int $userId): Task
+    public function createTask(TaskDTO $taskDTO, int $projectId): Task
     {
-        $user = $this->userService->getUserById($userId);
-        return $this->taskRepository->storeTask(user: $user, taskDTO: $taskDTO);
-    }
 
-    /**
-     * @throws NotFoundException
-     */
-    public function updateUserTask(TaskDTO $taskDTO, int $userId, int $projectId, int $taskId): Task
-    {
-        $task = $this->getUserTaskById(userId: $userId, projectId: $projectId, taskId: $taskId);
-        $taskName = $taskDTO->getTaskName();
-        $taskDescription = $taskDTO->getTaskDescription();
+        $project = $this->projectService->getUserProjectById($projectId);
 
-        if ($taskName !== null) {
-            $task->task_name = $taskName;
-        }
+        $task = new Task();
+        $task->task_name = $taskDTO->getTaskName();
+        $task->task_description = $taskDTO->getTaskDescription();
+        $task->status = $taskDTO->getStatus();
+        $task->priority = $taskDTO->getPriority();
+        $task->deadline = $taskDTO->getDeadline();
+        $task->assigner_id = $taskDTO->getAssignerId();
+        $task->project_id = $project->id;
 
-        if ($taskDescription !== null) {
-            $task->task_description = $taskDescription;
-        }
-
-        $task->save();
+        $this->taskRepository->storeTask($task);
         return $task;
     }
 
     /**
      * @throws NotFoundException
      */
-    public function deleteUserTask(int $userId, int $projectId, int $taskId): string
+    public function updateProjectTask(TaskDTO $taskDTO, int $projectId, int $taskId): Task
     {
-        $task = $this->getUserTaskById(
-            userId: $userId,
-            projectId: $projectId,
-            taskId: $taskId
+        $task = $this->getProjectTaskById(
+            projectId: $projectId, taskId: $taskId
         );
 
-        $task->delete();
+        $taskName = $taskDTO->getTaskName();
+        $taskDescription = $taskDTO->getTaskDescription();
+        $taskAssigner = $taskDTO->getAssignerId();
+        $taskDeadline = $taskDTO->getDeadline();
+        $taskStatus = $taskDTO->getStatus();
+        $taskPriority = $taskDTO->getPriority();
+
+        $task->task_name = $taskName;
+
+        if ($taskDescription !== null) {
+            $task->task_description = $taskDescription;
+        }
+        if ($taskAssigner !== null) {
+            $task->assigner_id = $taskAssigner;
+        }
+        if ($taskDeadline !== null) {
+            $task->deadline = $taskDeadline;
+        }
+        if ($taskStatus !== null) {
+            $task->status = $taskStatus;
+        }
+        if ($taskPriority !== null) {
+            $task->priority = $taskPriority;
+        }
+
+        $this->taskRepository->storeTask($task);
+
+        return $task;
+    }
+
+    /**
+     * @throws NotFoundException
+     */
+    public function deleteProjectTask(int $projectId, int $taskId): string
+    {
+        $task = $this->getProjectTaskById($projectId, $taskId);
+
+        $this->taskRepository->deleteTask($task);
         return __('messages.delete_successful');
     }
-    public function addUserToTask()
-    {
 
+    /**
+     * @throws NotFoundException
+     */
+    public function addAssigner(int $projectId, int $taskId, string $email): User
+    {
+        $project = $this->projectService->getUserProjectById($projectId);
+
+        $user = $this->userRepository->getProjectUserByEmail($project, $email);
+
+        if ($user === null) {
+            throw new NotFoundException('User' . __('messages.with_email_not_found'));
+        }
+
+        $task = $this->getProjectTaskById($projectId, $taskId);
+
+        $task->assigner_id = $user->id;
+
+        $this->taskRepository->storeTask($task);
+
+        return $task->assigner()->first();
     }
 }
 

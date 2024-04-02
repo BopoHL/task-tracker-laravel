@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Interfaces\IUserRepository;
+use App\Models\Project;
 use App\Models\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -42,5 +43,10 @@ class UserRepository implements IUserRepository
     public function getAuthUser(): User|Authenticatable|null
     {
         return Auth::user();
+    }
+
+    public function getProjectUserByEmail(Project $project, string $email): User|null
+    {
+        return $project->users()->where('email', $email)->first();
     }
 }

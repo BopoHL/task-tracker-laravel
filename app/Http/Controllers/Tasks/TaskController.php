@@ -10,10 +10,12 @@ use App\Http\Requests\Tasks\TaskRequest;
 use App\Http\Resources\Tasks\TaskCollection;
 use App\Http\Resources\Tasks\TaskResource;
 use App\Http\Resources\TaskUsersCollection;
+use App\Http\Resources\Users\UserResource;
 use App\Services\AddUserToTaskService;
 use App\Services\TaskService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class TaskController extends Controller
 {
@@ -25,111 +27,57 @@ class TaskController extends Controller
     {
 
     }
-//    public function index(): TaskCollection
-//    {
-//        $tasks = $this->service->getAllTasks();
-//        return new TaskCollection($tasks);
-//    }
-//
-//    /**
-//     * Store a newly created resource in storage.
-//     */
-////    public function store(TaskRequest $request): JsonResponse
-////    {
-////        $validated = $request->validated();
-////        $task = $this->service->createTask(TaskDTO::fromArray($validated));
-////        return response()->json(new TaskResource($task));
-////    }
-//    public function store(int $userId, TaskRequest $request): TaskResource
-//    {
-//        $validated = $request->validated();
-//        $task = $this->service
-//            ->createTask(
-//                TaskDTO::fromArray($validated),
-//                userId: $userId
-//            );
-//        return new TaskResource($task);
-//    }
-//
-//    /**
-//     * Display the specified resource.
-//     * @throws NotFoundException
-//     */
-//    public function show(int $taskId): JsonResponse
-//    {
-//        $task = $this->service->getTaskById($taskId, ['assigner', 'project']);
-//        return response()->json(new TaskResource($task));
-//    }
-//
-//
-//    /**
-//     * Update the specified resource in storage.
-//     * @throws NotFoundException
-//     */
-//    public function update(TaskRequest $request, int $taskId): JsonResponse
-//    {
-//        $validated = $request->validated();
-//        $task = $this->service->updateTask(TaskDTO::fromArray($validated), $taskId);
-//        return response()->json(new TaskResource($task));
-//    }
-//
-//    /**
-//     * Remove the specified resource from storage.
-//     * @throws NotFoundException
-//     */
-//    public function destroy(int $taskId): JsonResponse
-//    {
-//        $result = $this->service->deleteTask($taskId);
-//        return response()->json(['message' => $result]);
-//    }
-    public function index(int $userId): TaskCollection
-    {
-        $tasks = $this->taskService->getAllUserTasks($userId);
-        return new TaskCollection($tasks);
-    }
 
     /**
-     * Show the form for creating a new resource.
      * @throws NotFoundException
      */
-    public function store(int $userId, TaskRequest $request): TaskResource
+    public function index(int $projectId): AnonymousResourceCollection
     {
-        $validated = $request->validated();
-        $task = $this->taskService
-            ->createTask(
-                TaskDTO::fromArray($validated),
-                userId: $userId
-            );
-        return new TaskResource($task);
+        $tasks = $this->taskService->getAllProjectTasks($projectId);
+        return TaskResource::collection($tasks);
     }
 
     /**
      * Display the specified resource.
      * @throws NotFoundException
      */
-    public function show(int $userId, int $projectId, int $taskId): TaskResource
+    public function show(int $projectId, int $taskId): TaskResource
     {
         $task = $this->taskService
-            ->getUserTaskById(
-                userId: $userId,
+            ->getProjectTaskById(
                 projectId: $projectId,
                 taskId: $taskId,
-                relatedTables: ['tasks.assigner', 'users']
+//                relatedTables: ['tasks.assigner', 'users']
             );
         return new TaskResource($task);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Show the form for creating a new resource.
      * @throws NotFoundException
      */
-    public function update(int $userId, TaskRequest $request, int $projectId, int $taskId): TaskResource
+    public function store(TaskRequest $request, int $projectId): TaskResource
     {
         $validated = $request->validated();
         $task = $this->taskService
-            ->updateUserTask(
+            ->createTask(
                 TaskDTO::fromArray($validated),
-                userId: $userId,
+                $projectId
+            );
+        return new TaskResource($task);
+    }
+
+
+    /**
+     * Update the specified resource in storage.
+     * @throws NotFoundException
+     */
+    public function update(TaskRequest $request, int $projectId, int $taskId): TaskResource
+    {
+        $validated = $request->validated();
+        $task = $this->taskService
+            ->updateProjectTask(
+                TaskDTO::fromArray($validated),
                 projectId: $projectId,
                 taskId: $taskId
             );
@@ -141,36 +89,35 @@ class TaskController extends Controller
      * Remove the specified resource from storage.
      * @throws NotFoundException
      */
-    public function destroy(int $userId, int $projectId, int $taskId): JsonResponse
+    public function destroy(int $projectId, int $taskId): JsonResponse
     {
-        $result = $this->taskService->deleteUserTask(userId: $userId, projectId: $projectId, taskId: $taskId);
+        $result = $this->taskService->deleteProjectTask(projectId: $projectId, taskId: $taskId);
         return response()->json(['message' => $result]);
     }
 
     /**
-     * @throws NotFoundException|InvalidOperationException
+     * @param int $taskId
+     * @param int $projectId
+     * @param Request $request
+     * @return UserResource
+     * @throws NotFoundException
      */
-    public function addMember(
-        int                     $userId,
-        int                     $taskId,
-        int                     $projectId,
-        Request                 $request,
-        AddUserToTaskService    $service
-    ): TaskUsersCollection
+    public function addAssigner(
+        int                  $taskId,
+        int                  $projectId,
+        Request              $request,
+    ): UserResource
     {
         $validated = $request->validate([
                 'email' => 'required|email',
-                'role' => 'required|string|in:owner,manager,contributor',
             ]
         );
-        $taskUsers = $service->addUserToTask(
-            userId: $userId,
-            userEmail: $validated['email'],
-            role: $validated['role'],
-            projectId: $projectId,
-            taskId: $taskId,
-        );
-        return new TaskUsersCollection($taskUsers);
+
+        $email = $validated['email'];
+
+        $assigner = $this->taskService->addAssigner($taskId, $projectId, $email);
+
+        return new UserResource($assigner);
     }
 
 }

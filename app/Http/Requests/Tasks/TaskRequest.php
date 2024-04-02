@@ -23,7 +23,6 @@ class TaskRequest extends FormRequest
     {
         return [
             'assigner_id' => 'nullable|exists:users,id',
-            'project_id' => 'required|exists:projects,id',
             'task_name' => 'required|string|max:100',
             'task_description' => 'nullable|string|max:400',
             'status' => 'nullable|in:not_started,in_progress,done,pause',

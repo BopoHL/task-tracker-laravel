@@ -17,15 +17,16 @@ class TaskResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'task_name' => $this->task_name,
-            'task_description' => $this->task_description,
-            'project_id' => $this->project_id,
+            'task_id' => $this->resource->id,
+            'task_name' => $this->resource->task_name,
+            'task_description' => $this->resource->task_description,
+            'project_id' => $this->resource->project_id,
             'project' => new ProjectResource($this->whenLoaded('project')),
-            'assigner_id' => $this->assigner_id,
-            'assigner' => $this->assigner ? new UserResource($this->whenLoaded('assigner')) : null,
-            'status' => $this->status,
-            'priority' => $this->priority,
-            'deadline' => $this->deadline,
+            'assigner_id' => $this->resource->assigner_id,
+            'assigner' => $this->resource->assigner ? new UserResource($this->whenLoaded('assigner')) : null,
+            'status' => $this->resource->status,
+            'priority' => $this->resource->priority,
+            'deadline' => $this->resource->deadline,
         ];
     }
 }

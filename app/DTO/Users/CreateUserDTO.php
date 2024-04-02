@@ -52,9 +52,9 @@ final class CreateUserDTO
         return $this->avatarUrl;
     }
 
-    public static function fromArray(array $data): static
+    public static function fromArray(array $data): CreateUserDTO
     {
-        return new static(
+        return new CreateUserDTO(
             name: $data['name'],
             email: $data['email'],
             dateOfBirth: $data['date_of_birth'],

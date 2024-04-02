@@ -34,9 +34,9 @@ final class UpdateUserDTO
         return $this->avatarUrl;
     }
 
-    public static function fromArray(array $data): static
+    public static function fromArray(array $data): UpdateUserDTO
     {
-        return new static(
+        return new UpdateUserDTO(
             name: $data['name'] ?? null,
             dateOfBirth: $data['date_of_birth'] ?? null,
             avatarUrl: $data['avatar_url'] ?? null,

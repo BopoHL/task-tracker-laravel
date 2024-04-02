@@ -23,7 +23,7 @@ class AddUserToProjectRequest extends FormRequest
     {
         return [
             'email' => 'required|email',
-            'role' => 'required|string|in:owner,manager,contributor',
+            'role' => 'required|string|in:manager,contributor',
         ];
     }
 }

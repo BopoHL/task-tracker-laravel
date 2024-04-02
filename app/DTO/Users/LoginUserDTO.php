@@ -26,9 +26,9 @@ final class LoginUserDTO
         return $this->password;
     }
 
-    public static function fromArray(array $data): static
+    public static function fromArray(array $data): LoginUserDTO
     {
-        return new static (
+        return new LoginUserDTO (
             email: $data['email'],
             password: $data['password']
         );

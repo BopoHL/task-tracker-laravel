@@ -26,9 +26,9 @@ final class ProjectDTO
         return $this->projectDescription;
     }
 
-    public static function fromArray(array $data): static
+    public static function fromArray(array $data): ProjectDTO
     {
-        return new static(
+        return new ProjectDTO(
             projectName: $data['project_name'],
             projectDescription: $data['project_description'] ?? null,
         );

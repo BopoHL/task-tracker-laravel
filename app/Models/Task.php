@@ -8,12 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
+ * @property int id
  * @property string task_name
  * @property string task_description
  * @property string status
  * @property string priority
- * @property User $assigner
- * @property Project $project
+ * @property User assigner
+ * @property Project project
  * @property int project_id
  * @property int assigner_id
  * @property  DateTime|string deadline

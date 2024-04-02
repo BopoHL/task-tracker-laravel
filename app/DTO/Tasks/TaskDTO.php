@@ -7,28 +7,26 @@ use DateTime;
 final class TaskDTO
 {
     /**
-     * @param string|null $taskName
+     * @param string $taskName
      * @param string|null $taskDescription
      * @param string|null $status
      * @param string|null $priority
      * @param string|DateTime|null $deadline
-     * @param string|null $projectId
-     * @param string|null $assignerId
+     * @param int|null $assignerId
      */
     public function __construct(
-        private readonly string|null          $taskName,
+        private readonly string         $taskName,
         private readonly string|null          $taskDescription,
         private readonly string|null          $status,
         private readonly string|null          $priority,
         private readonly string|DateTime|null $deadline,
-        private readonly string|null             $projectId,
-        private readonly string|null        $assignerId,
+        private readonly int|null        $assignerId,
     )
     {
 
     }
 
-    public function getTaskName(): string|null
+    public function getTaskName(): string
     {
         return $this->taskName;
     }
@@ -56,25 +54,19 @@ final class TaskDTO
         return $this->deadline;
     }
 
-    public function getProjectId(): string|null
-    {
-        return $this->projectId;
-    }
-
-    public function getAssignerId(): string|null
+    public function getAssignerId(): int|null
     {
         return $this->assignerId;
     }
 
-    public static function fromArray(array $data): static
+    public static function fromArray(array $data): TaskDTO
     {
-        return new static(
+        return new TaskDTO(
             taskName: $data['task_name'],
             taskDescription: $data['task_description'] ?? null,
             status: $data['status'] ?? 'not_started',
             priority: $data['priority'] ?? null,
             deadline: $data['deadline'] ?? null,
-            projectId: $data['project_id'],
             assignerId: $data['assigner_id'] ?? null,
         );
     }
