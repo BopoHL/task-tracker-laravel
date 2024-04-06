@@ -3,6 +3,7 @@
 namespace App\DTO\Users;
 
 use DateTime;
+use Illuminate\Http\UploadedFile;
 
 final class CreateUserDTO
 {
@@ -12,6 +13,7 @@ final class CreateUserDTO
      * @param string|DateTime $dateOfBirth
      * @param string $password
      * @param string|null $avatarUrl
+     * @param UploadedFile|null $avatar
      */
     public function __construct(
         private readonly string          $name,
@@ -19,6 +21,7 @@ final class CreateUserDTO
         private readonly string|DateTime $dateOfBirth,
         private readonly string          $password,
         private readonly string|null          $avatarUrl,
+        private readonly UploadedFile|null $avatar,
     )
     {
 
@@ -27,6 +30,11 @@ final class CreateUserDTO
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function getAvatar(): UploadedFile|null
+    {
+        return $this->avatar;
     }
 
     public function getEmail(): string
@@ -60,6 +68,7 @@ final class CreateUserDTO
             dateOfBirth: $data['date_of_birth'],
             password: $data['password'],
             avatarUrl: $data['avatar_url'] ?? null,
+            avatar: $data['avatar'] ?? null,
         );
     }
 }

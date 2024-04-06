@@ -22,7 +22,7 @@ class Project extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['project_name', 'project_description', 'owner_id'];
+    protected $fillable = ['project_name', 'project_description'];
 
     public function users(): BelongsToMany
     {

@@ -10,6 +10,7 @@ return [
     'email_not_confirmed' => 'Email not confirmed',
     'register_success' => 'Register was success. Please check your email',
     'thanks' => 'Thank You',
+    'hello' => 'Hello',
     'finish_register' => 'To complete registration please follow the following link:',
     'link' => 'link',
     'token_expired' => 'Token expired',
@@ -18,4 +19,6 @@ return [
     'login_failed' => 'Login failed',
     'logout_complete' => 'Logout was complete',
     'not_login' => 'User is not login',
+    'added_to_project' => 'You have been added to project',
+    'can_start_working_now' => 'You can start working now',
 ];

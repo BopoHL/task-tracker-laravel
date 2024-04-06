@@ -13,6 +13,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class RegisterLoginService
@@ -48,7 +49,12 @@ class RegisterLoginService
             $user->email = $userDTO->getEmail();
             $user->password = bcrypt($userDTO->getPassword());
             $user->date_of_birth = $userDTO->getDateOfBirth();
-            $user->avatar_url = $userDTO->getAvatarUrl();
+
+            $avatar = $userDTO->getAvatar();
+            if ($avatar !== null) {
+                $avatarPath = $avatar->store('avatars', 'public');
+                $user->avatar_url = Storage::url($avatarPath);
+            }
             $this->userRepository->storeUser($user);
 
             return response()->json(['message' => __('messages.register_success')]);

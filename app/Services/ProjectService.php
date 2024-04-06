@@ -6,8 +6,11 @@ use App\DTO\Projects\ProjectDTO;
 use App\Exceptions\InvalidOperationException;
 use App\Exceptions\NotFoundException;
 use App\Interfaces\IProjectRepository;
+use App\Jobs\SendUserAddedToProjectMail;
+use App\Mail\UserAddedToProjectMail;
 use App\Models\Project;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Mail;
 
 class ProjectService
 {
@@ -106,6 +109,7 @@ class ProjectService
             ->exists()
         ) {
             $project->users()->attach($newUser, ['role' => $role]);
+            dispatch(new SendUserAddedToProjectMail($newUser, $project));
             return $project->users()->withPivot('role')->get();
         } else {
             throw new InvalidOperationException(__('messages.invalid_operation'), 403);

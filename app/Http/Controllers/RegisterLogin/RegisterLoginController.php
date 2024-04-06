@@ -30,6 +30,7 @@ class RegisterLoginController extends Controller
     public function register(RegisterRequest $registerRequest): JsonResponse
     {
         $validated = $registerRequest->validated();
+        $validated['avatar'] = $registerRequest->file('avatar');
         return $this->registerLoginService->registerUser(CreateUserDTO::fromArray($validated));
     }
 
